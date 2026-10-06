@@ -13,6 +13,10 @@ npm run dev
 
 Then open the URL printed in the terminal (usually http://localhost:5173).
 
+`node scripts/count-filings.js` downloads the latest daily Sunbiz file and prints the count of new Hillsborough filings.
+
 ## MVP scope
 
 The first version of Nexora will use a single data source: new business registrations in Hillsborough County, Florida, published by the Florida Division of Corporations through Sunbiz. A brand-new business owner faces immediate decisions about insurance, retirement plans, payroll, and banking, which makes them one of the highest-value people an advisor can reach early. For the MVP, Nexora will pull recent filings, rank them for one specific advisor, and explain why each business made the list. New homeowners and local events are on the roadmap for later versions.
+
+Hillsborough is matched by principal address ZIP code. Nexora includes any ZIP that touches Hillsborough County, even partly, using the 2020 Census ZIP-to-county relationship file (58 ZIPs). This captures every Hillsborough business, at the cost of including some filings from border areas near Pasco, Polk, Pinellas, and Manatee counties. Only business-level fields are loaded: entity name, type, filing date, and ZIP. Officer and registered agent names are never stored.

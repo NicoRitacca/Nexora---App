@@ -1,4 +1,7 @@
 # Nexora---App
+
+Live: https://main.d3iy4xw5t934am.amplifyapp.com
+
 Nexora is a personalized opportunity-discovery platform for independent financial advisors currently operating in the Tampa area. Advisors complete a short profile describing their experience, current and ideal clients, location, and weekly prospecting goals. Nexora starts with new business registrations in Hillsborough County, identifying recently formed businesses and ranking them based on factors such as advisor fit, recency, relevance, and location. Instead of overwhelming advisors with a generic list of leads, Nexora provides a small, prioritized feed of opportunities and explains why each one is relevant to that specific advisor.
 Nico Ritacca CUA Busch School AI Vibe Coding Contest, Fall 2026
 

@@ -13,6 +13,12 @@ npm run dev
 
 Then open the URL printed in the terminal (usually http://localhost:5173).
 
+Before running the filings script, copy `.env.example` to `.env` and fill in the Sunbiz SFTP credentials:
+
+```
+cp .env.example .env
+```
+
 `node scripts/count-filings.js` downloads the latest daily Sunbiz file and prints the count of new Hillsborough filings.
 
 ## MVP scope

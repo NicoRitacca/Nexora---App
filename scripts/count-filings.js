@@ -21,15 +21,24 @@ import path from "path";
 import https from "https";
 import { fileURLToPath } from "url";
 import SftpClient from "ssh2-sftp-client";
+import dotenv from "dotenv";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = path.join(__dirname, "..", "data");
 
+dotenv.config({ path: path.join(__dirname, "..", ".env") });
+
+if (!process.env.SUNBIZ_SFTP_USERNAME || !process.env.SUNBIZ_SFTP_PASSWORD) {
+  throw new Error(
+    "Missing SUNBIZ_SFTP_USERNAME or SUNBIZ_SFTP_PASSWORD. Copy .env.example to .env and fill in the values."
+  );
+}
+
 const SFTP_CONFIG = {
   host: "sftp.floridados.gov",
   port: 22,
-  username: "Public",
-  password: "PubAccess1845!",
+  username: process.env.SUNBIZ_SFTP_USERNAME,
+  password: process.env.SUNBIZ_SFTP_PASSWORD,
   readyTimeout: 20000,
 };
 const SFTP_COR_DIR = "./doc/cor";

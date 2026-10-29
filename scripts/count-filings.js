@@ -132,7 +132,12 @@ async function downloadCensusRelationshipFile() {
   return localPath;
 }
 
-async function buildHillsboroughZipSet(censusFilePath) {
+// Returns a Map of ZIP -> "full" | "partial" for every ZIP (ZCTA) that
+// touches Hillsborough County. A ZIP is "full" if it appears in exactly one
+// county row in the relationship file (it lies entirely within Hillsborough);
+// it's "partial" if it appears in more than one county row (it also extends
+// into a neighboring county, e.g. Pasco, Polk, Pinellas, or Manatee).
+async function buildHillsboroughZipInfo(censusFilePath) {
   const content = await fs.promises.readFile(censusFilePath, "utf8");
   const lines = content.replace(/^﻿/, "").split(/\r\n|\n/).filter(Boolean);
   const header = lines[0].split("|");
@@ -142,14 +147,23 @@ async function buildHillsboroughZipSet(censusFilePath) {
     throw new Error("Unexpected Census relationship file format: missing expected columns.");
   }
 
-  const zips = new Set();
+  const rowCountByZip = new Map();
+  const hillsboroughZips = new Set();
   for (const line of lines.slice(1)) {
     const cols = line.split("|");
-    if (cols[countyIdx] === HILLSBOROUGH_COUNTY_FIPS && cols[zctaIdx]) {
-      zips.add(cols[zctaIdx].trim());
+    const zip = cols[zctaIdx] ? cols[zctaIdx].trim() : "";
+    if (!zip) continue;
+    rowCountByZip.set(zip, (rowCountByZip.get(zip) || 0) + 1);
+    if (cols[countyIdx] === HILLSBOROUGH_COUNTY_FIPS) {
+      hillsboroughZips.add(zip);
     }
   }
-  return zips;
+
+  const zipInfo = new Map();
+  for (const zip of hillsboroughZips) {
+    zipInfo.set(zip, rowCountByZip.get(zip) === 1 ? "full" : "partial");
+  }
+  return zipInfo;
 }
 
 function parseFileDateFromName(fileName) {
@@ -207,16 +221,21 @@ async function main() {
     downloadCensusRelationshipFile(),
   ]);
 
-  const hillsboroughZips = await buildHillsboroughZipSet(censusFilePath);
+  const hillsboroughZipInfo = await buildHillsboroughZipInfo(censusFilePath);
   const fileDate = parseFileDateFromName(fileName);
   const allRecords = await parseCorporateFile(corFilePath);
 
-  const hillsboroughRecords = allRecords.filter(
-    (r) => r.zip5 && hillsboroughZips.has(r.zip5)
-  );
+  const hillsboroughRecords = allRecords
+    .filter((r) => r.zip5 && hillsboroughZipInfo.has(r.zip5))
+    .map((r) => ({ ...r, zipCoverage: hillsboroughZipInfo.get(r.zip5) }));
   const newHillsboroughFilings = hillsboroughRecords.filter(
     (r) => r.fileDate && daysBetween(r.fileDate, fileDate) <= WITHIN_DAYS
   );
+
+  const fullZipCount = [...hillsboroughZipInfo.values()].filter((v) => v === "full").length;
+  const partialZipCount = [...hillsboroughZipInfo.values()].filter((v) => v === "partial").length;
+  const fullFilingsCount = newHillsboroughFilings.filter((r) => r.zipCoverage === "full").length;
+  const partialFilingsCount = newHillsboroughFilings.filter((r) => r.zipCoverage === "partial").length;
 
   const addressCounts = new Map();
   for (const r of newHillsboroughFilings) {
@@ -239,6 +258,13 @@ async function main() {
   console.log(`Hillsborough County records (by principal ZIP): ${hillsboroughRecords.length}`);
   console.log(
     `New Hillsborough filings (filed within ${WITHIN_DAYS} days of file date): ${newHillsboroughFilings.length}`
+  );
+  console.log("");
+  console.log(
+    `Hillsborough ZIPs: ${fullZipCount} full (entirely within Hillsborough), ${partialZipCount} partial (also extend into another county)`
+  );
+  console.log(
+    `New Hillsborough filings by ZIP coverage: ${fullFilingsCount} full, ${partialFilingsCount} partial`
   );
   console.log("");
   console.log(

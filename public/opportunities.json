@@ -6,6 +6,7 @@
     "name": "LEGACY NETWORKING VENTURES,LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-22",
+    "city": "Sun City Center",
     "zip": "33573",
     "zipCoverage": "full"
   },
@@ -16,6 +17,7 @@
     "name": "SQUARE AT OSCEOLA PARKWAY PROPERTY OWNERS ASSOCIATION, INC.",
     "entityType": "Florida Nonprofit Corporation",
     "date": "2026-10-27",
+    "city": "Tampa",
     "zip": "33618",
     "zipCoverage": "full"
   },
@@ -26,6 +28,7 @@
     "name": "MSD IMPERIAL GROUP LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-28",
+    "city": "Tampa",
     "zip": "33618",
     "zipCoverage": "full"
   },
@@ -36,6 +39,7 @@
     "name": "STS PERMITS LLC",
     "entityType": "Florida LLC",
     "date": "2026-12-01",
+    "city": "Odessa",
     "zip": "33556",
     "zipCoverage": "partial"
   },
@@ -46,6 +50,7 @@
     "name": "KMCOMPRAS LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-27",
+    "city": "Lakeland",
     "zip": "33810",
     "zipCoverage": "partial"
   },
@@ -56,6 +61,7 @@
     "name": "ROSARK LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-28",
+    "city": "Valrico",
     "zip": "33596",
     "zipCoverage": "full"
   },
@@ -66,6 +72,7 @@
     "name": "HAIR BY MIRANDA TAMPA LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-26",
+    "city": "Tampa",
     "zip": "33615",
     "zipCoverage": "full"
   },
@@ -76,6 +83,7 @@
     "name": "LEGACY VISION GROUP LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-28",
+    "city": "Tampa",
     "zip": "33604",
     "zipCoverage": "full"
   },
@@ -86,6 +94,7 @@
     "name": "THE METABOLIC STRATEGY PLLC",
     "entityType": "Florida LLC",
     "date": "2026-10-28",
+    "city": "Tampa",
     "zip": "33647",
     "zipCoverage": "full"
   },
@@ -96,6 +105,7 @@
     "name": "SHIPMATIC LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-28",
+    "city": "Tampa",
     "zip": "33613",
     "zipCoverage": "full"
   },
@@ -106,6 +116,7 @@
     "name": "TYGA TY HOLDINGS LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-28",
+    "city": "Valrico",
     "zip": "33596",
     "zipCoverage": "full"
   },
@@ -116,6 +127,7 @@
     "name": "SANCHEZ VENDOR SERVICES LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-28",
+    "city": "Tampa",
     "zip": "33624",
     "zipCoverage": "full"
   },
@@ -126,6 +138,7 @@
     "name": "OPEN TERRAIN LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-28",
+    "city": "Tampa",
     "zip": "33606",
     "zipCoverage": "full"
   },
@@ -136,6 +149,7 @@
     "name": "LINAN FINANCIAL LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-28",
+    "city": "Tampa",
     "zip": "33604",
     "zipCoverage": "full"
   },
@@ -146,6 +160,7 @@
     "name": "ANDREW HILL, LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-28",
+    "city": "Tampa",
     "zip": "33626",
     "zipCoverage": "full"
   },
@@ -156,6 +171,7 @@
     "name": "4407 HUBERT, LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-28",
+    "city": "Tampa",
     "zip": "33607",
     "zipCoverage": "full"
   },
@@ -166,6 +182,7 @@
     "name": "BIBENS HAUS & CO. LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-21",
+    "city": "Tampa",
     "zip": "33603",
     "zipCoverage": "full"
   },
@@ -176,6 +193,7 @@
     "name": "DR FOLKEN LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-26",
+    "city": "Riverview",
     "zip": "33578",
     "zipCoverage": "full"
   },
@@ -186,6 +204,7 @@
     "name": "EVERYTHINGS CLEANED 1ST SERVICES LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-28",
+    "city": "Tampa",
     "zip": "33610",
     "zipCoverage": "full"
   },
@@ -196,6 +215,7 @@
     "name": "PIP CONSULTING & SERVICES LLC",
     "entityType": "Florida LLC",
     "date": "2026-11-01",
+    "city": "Mulberry",
     "zip": "33860",
     "zipCoverage": "partial"
   },
@@ -206,6 +226,7 @@
     "name": "LIA CRYSTAL CLEANING LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-28",
+    "city": "Tampa",
     "zip": "33618",
     "zipCoverage": "full"
   },
@@ -216,6 +237,7 @@
     "name": "M&J CONSTRUCTION GROUP LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-28",
+    "city": "Ruskin",
     "zip": "33570",
     "zipCoverage": "full"
   },
@@ -226,6 +248,7 @@
     "name": "ESTUARY LENDING LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-28",
+    "city": "Tampa",
     "zip": "33607",
     "zipCoverage": "full"
   },
@@ -236,6 +259,7 @@
     "name": "DMY AIR CONDITIONING MAINTENANCE LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-28",
+    "city": "Tampa",
     "zip": "33612",
     "zipCoverage": "full"
   },
@@ -246,6 +270,7 @@
     "name": "DOTY GROUP LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-28",
+    "city": "Apollo Beach",
     "zip": "33572",
     "zipCoverage": "full"
   },
@@ -256,6 +281,7 @@
     "name": "1MBURIEDBUTALIVE LLC",
     "entityType": "Florida LLC",
     "date": "2026-11-01",
+    "city": "Valrico",
     "zip": "33596",
     "zipCoverage": "full"
   },
@@ -266,6 +292,7 @@
     "name": "EAZY MONEY RENTALS & TRANSPORT LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-27",
+    "city": "Tampa",
     "zip": "33604",
     "zipCoverage": "full"
   },
@@ -276,6 +303,7 @@
     "name": "VARELA AUTOPART LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-28",
+    "city": "Tampa",
     "zip": "33634",
     "zipCoverage": "full"
   },
@@ -286,6 +314,7 @@
     "name": "FIX & SHINE FLORIDA, LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-28",
+    "city": "Brandon",
     "zip": "33510",
     "zipCoverage": "full"
   },
@@ -296,6 +325,7 @@
     "name": "ELEVATION BUSINESS PARTNERS LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-28",
+    "city": "Tampa",
     "zip": "33647",
     "zipCoverage": "full"
   },
@@ -306,6 +336,7 @@
     "name": "PDBD MILTON LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-28",
+    "city": "Tampa",
     "zip": "33629",
     "zipCoverage": "full"
   },
@@ -316,6 +347,7 @@
     "name": "DIORS WATER ICE LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-23",
+    "city": "Tampa",
     "zip": "33647",
     "zipCoverage": "full"
   },
@@ -326,6 +358,7 @@
     "name": "DIXON SALES TEAM LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-26",
+    "city": "Tampa",
     "zip": "33611",
     "zipCoverage": "full"
   },
@@ -336,6 +369,7 @@
     "name": "PRIVATE FORTUNE LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-28",
+    "city": "Brandon",
     "zip": "33510",
     "zipCoverage": "full"
   },
@@ -346,6 +380,7 @@
     "name": "EPG ADS LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-28",
+    "city": "Brandon",
     "zip": "33511",
     "zipCoverage": "full"
   },
@@ -356,6 +391,7 @@
     "name": "COASTAL SANDS VACATION RENTALS LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-28",
+    "city": "Valrico",
     "zip": "33594",
     "zipCoverage": "full"
   },
@@ -366,6 +402,7 @@
     "name": "TKL IICONIC LEGACY LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-27",
+    "city": "Ruskin",
     "zip": "33570",
     "zipCoverage": "full"
   },
@@ -376,6 +413,7 @@
     "name": "VELVET BODY SPA LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-28",
+    "city": "Tampa",
     "zip": "33625",
     "zipCoverage": "full"
   },
@@ -386,6 +424,7 @@
     "name": "CURTLEY'S FAMILY CARE LLC.",
     "entityType": "Florida LLC",
     "date": "2026-10-23",
+    "city": "Riverview",
     "zip": "33579",
     "zipCoverage": "full"
   },
@@ -396,6 +435,7 @@
     "name": "MOLLY MOLLOY CATLETT, LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-28",
+    "city": "Tampa",
     "zip": "33629",
     "zipCoverage": "full"
   },
@@ -406,6 +446,7 @@
     "name": "WILLIAN FENCING LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-28",
+    "city": "Thonotosassa",
     "zip": "33592",
     "zipCoverage": "full"
   },
@@ -416,6 +457,7 @@
     "name": "SEAN SOLUTIONS LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-28",
+    "city": "Brandon",
     "zip": "33511",
     "zipCoverage": "full"
   },
@@ -426,6 +468,7 @@
     "name": "GATTOMEDIA LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-28",
+    "city": "Tampa",
     "zip": "33603",
     "zipCoverage": "full"
   },
@@ -436,6 +479,7 @@
     "name": "IVAPE LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-28",
+    "city": "Tampa",
     "zip": "33626",
     "zipCoverage": "full"
   },
@@ -446,6 +490,7 @@
     "name": "ENCOUNTERMARK LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-28",
+    "city": "Tampa",
     "zip": "33602",
     "zipCoverage": "full"
   },
@@ -456,6 +501,7 @@
     "name": "ARCHWELL PODIATRY LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-28",
+    "city": "Tampa",
     "zip": "33624",
     "zipCoverage": "full"
   },
@@ -466,6 +512,7 @@
     "name": "FIVE GUYS AUTO SALES AND RENTAL'S LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-28",
+    "city": "Tampa",
     "zip": "33613",
     "zipCoverage": "full"
   },
@@ -476,6 +523,7 @@
     "name": "SLAMMIN SLOTS INSHORE CHARTERS LIMITED LIABILITY COMPANY",
     "entityType": "Florida LLC",
     "date": "2026-10-28",
+    "city": "Apollo Beach",
     "zip": "33572",
     "zipCoverage": "full"
   },
@@ -486,6 +534,7 @@
     "name": "ZURY PEARL CLEANING LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-28",
+    "city": "Tampa",
     "zip": "33604",
     "zipCoverage": "full"
   },
@@ -496,6 +545,7 @@
     "name": "NICE & EASY CLEANING SERVICES LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-28",
+    "city": "Tampa",
     "zip": "33607",
     "zipCoverage": "full"
   },
@@ -506,6 +556,7 @@
     "name": "RYHD LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-28",
+    "city": "Tampa",
     "zip": "33616",
     "zipCoverage": "full"
   },
@@ -516,6 +567,7 @@
     "name": "STAPLETON FROST FUNDS, LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-28",
+    "city": "Tampa",
     "zip": "33602",
     "zipCoverage": "full"
   },
@@ -526,6 +578,7 @@
     "name": "PRAXISPRING LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-22",
+    "city": "Valrico",
     "zip": "33596",
     "zipCoverage": "full"
   },
@@ -536,6 +589,7 @@
     "name": "SINCERAE MORNING STAR TRANSPORTATION  LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-28",
+    "city": "Brandon",
     "zip": "33511",
     "zipCoverage": "full"
   },
@@ -546,6 +600,7 @@
     "name": "R.C.V TRANSPORT, LLC.",
     "entityType": "Florida LLC",
     "date": "2026-11-01",
+    "city": "Tampa",
     "zip": "33619",
     "zipCoverage": "full"
   },
@@ -556,6 +611,7 @@
     "name": "TSAR II LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-28",
+    "city": "Tampa",
     "zip": "33603",
     "zipCoverage": "full"
   },
@@ -566,6 +622,7 @@
     "name": "FLASHHIDER LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-28",
+    "city": "Tampa",
     "zip": "33602",
     "zipCoverage": "full"
   },
@@ -576,6 +633,7 @@
     "name": "BOOKS 'N BEANS, LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-23",
+    "city": "Ruskin",
     "zip": "33573",
     "zipCoverage": "full"
   },
@@ -586,6 +644,7 @@
     "name": "STEELPOINT SOUTHERN FABRICATION, LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-28",
+    "city": "Mulberry",
     "zip": "33860",
     "zipCoverage": "partial"
   },
@@ -596,6 +655,7 @@
     "name": "BARNA BROS, LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-28",
+    "city": "Tampa",
     "zip": "33609",
     "zipCoverage": "full"
   },
@@ -606,6 +666,7 @@
     "name": "LON LYNN DO LLC",
     "entityType": "Florida LLC",
     "date": "2026-10-28",
+    "city": "Lutz",
     "zip": "33558",
     "zipCoverage": "partial"
   },
@@ -616,6 +677,7 @@
     "name": "LEDGERSTONE SOLUTIONS LLC",
     "entityType": "Florida LLC",
     "date": "2026-11-01",
+    "city": "Tampa",
     "zip": "33615",
     "zipCoverage": "full"
   }

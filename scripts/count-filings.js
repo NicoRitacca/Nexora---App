@@ -62,6 +62,7 @@ const FIELDS = {
   NAME: { start: 13, length: 192 },
   FILING_TYPE: { start: 206, length: 15 },
   PRINCIPAL_ADDRESS_1: { start: 221, length: 42 },
+  PRINCIPAL_CITY: { start: 305, length: 28 },
   PRINCIPAL_ZIP: { start: 335, length: 10 },
   FILE_DATE: { start: 473, length: 8 }, // MMDDYYYY
 };
@@ -82,6 +83,21 @@ const ENTITY_TYPE_LABELS = {
 
 function entityTypeLabel(filingType) {
   return ENTITY_TYPE_LABELS[filingType] || filingType;
+}
+
+// Sunbiz city names are all-caps (e.g. "TAMPA") and sometimes have the state
+// typed into the same field by mistake (e.g. "BRANDON FL", "BRANDON,FLORIDA").
+// Strip that off, then title-case the result for display.
+function cleanCityName(raw) {
+  const withoutState = raw
+    .trim()
+    .replace(/[,.\s]+(FLORIDA|FLA|FL)\.?$/i, "")
+    .trim();
+  return withoutState
+    .toLowerCase()
+    .split(/(\s+|-)/)
+    .map((part) => (/^[a-z]/.test(part) ? part[0].toUpperCase() + part.slice(1) : part))
+    .join("");
 }
 
 const WITHIN_DAYS = 30;
@@ -230,6 +246,7 @@ async function parseCorporateFile(localPath) {
       name: extractField(line, FIELDS.NAME).trim(),
       filingType: extractField(line, FIELDS.FILING_TYPE).trim(),
       principalAddress1: extractField(line, FIELDS.PRINCIPAL_ADDRESS_1).trim(),
+      city: extractField(line, FIELDS.PRINCIPAL_CITY).trim(),
       zip5: parseZip5(extractField(line, FIELDS.PRINCIPAL_ZIP)),
       fileDate: parseRecordFileDate(extractField(line, FIELDS.FILE_DATE)),
     });
@@ -248,6 +265,7 @@ async function writeOpportunitiesJson(filings) {
     name: r.name,
     entityType: entityTypeLabel(r.filingType),
     date: r.fileDate.toISOString().slice(0, 10),
+    city: r.city ? cleanCityName(r.city) : null,
     zip: r.zip5,
     zipCoverage: r.zipCoverage,
   }));

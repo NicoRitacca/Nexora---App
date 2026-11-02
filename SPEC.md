@@ -16,8 +16,8 @@ Each week, know where to start a few new conversations, why, who could help intr
    - Current clients
    - Ideal clients
    - Preferred outreach style (e.g. in person, introductions, or online)
-   - Location and ZIPs they cover
-   - Weekly conversation goal
+   - Cities they cover (checklist, built from the principal city field in the Sunbiz filings), plus optional specific ZIPs
+   - New conversations per week (goal)
    - Existing network, described by type or organization only (e.g. "a CPA firm that serves physicians" or "member of the local chamber of commerce") — no personal names
 
 2. **Nexora loads recent opportunities.** MVP sources:
@@ -33,7 +33,7 @@ Each week, know where to start a few new conversations, why, who could help intr
 
 ## Data Model
 
-- **Opportunity** — id, source, type ("business" or "event"), name, entity type, date, ZIP, ZIP coverage (full or partial). Designed so new sources and types can be added later. For events, hosting organization is used instead of entity type.
+- **Opportunity** — id, source, type ("business" or "event"), name, entity type, date, city, ZIP, ZIP coverage (full or partial). Designed so new sources and types can be added later. For events, hosting organization is used instead of entity type.
 - **Advisor Profile** — the fields from step 1 above.
 - **Action** — opportunity id, choice (conversation / save / skip), date.
 

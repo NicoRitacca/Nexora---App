@@ -1,0 +1,622 @@
+[
+  {
+    "id": "L26000550890",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "LEGACY NETWORKING VENTURES,LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-22",
+    "zip": "33573",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "N26000014860",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "SQUARE AT OSCEOLA PARKWAY PROPERTY OWNERS ASSOCIATION, INC.",
+    "entityType": "Florida Nonprofit Corporation",
+    "date": "2026-10-27",
+    "zip": "33618",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000551490",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "MSD IMPERIAL GROUP LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-28",
+    "zip": "33618",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000551670",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "STS PERMITS LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-12-01",
+    "zip": "33556",
+    "zipCoverage": "partial"
+  },
+  {
+    "id": "L26000550911",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "KMCOMPRAS LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-27",
+    "zip": "33810",
+    "zipCoverage": "partial"
+  },
+  {
+    "id": "L26000550981",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "ROSARK LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-28",
+    "zip": "33596",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000551111",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "HAIR BY MIRANDA TAMPA LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-26",
+    "zip": "33615",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000551151",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "LEGACY VISION GROUP LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-28",
+    "zip": "33604",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000551401",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "THE METABOLIC STRATEGY PLLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-28",
+    "zip": "33647",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000551431",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "SHIPMATIC LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-28",
+    "zip": "33613",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000551511",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "TYGA TY HOLDINGS LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-28",
+    "zip": "33596",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000551681",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "SANCHEZ VENDOR SERVICES LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-28",
+    "zip": "33624",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000550892",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "OPEN TERRAIN LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-28",
+    "zip": "33606",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000551002",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "LINAN FINANCIAL LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-28",
+    "zip": "33604",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000551092",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "ANDREW HILL, LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-28",
+    "zip": "33626",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000551422",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "4407 HUBERT, LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-28",
+    "zip": "33607",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000551562",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "BIBENS HAUS & CO. LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-21",
+    "zip": "33603",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000550903",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "DR FOLKEN LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-26",
+    "zip": "33578",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000550963",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "EVERYTHINGS CLEANED 1ST SERVICES LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-28",
+    "zip": "33610",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000551443",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "PIP CONSULTING & SERVICES LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-11-01",
+    "zip": "33860",
+    "zipCoverage": "partial"
+  },
+  {
+    "id": "L26000551463",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "LIA CRYSTAL CLEANING LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-28",
+    "zip": "33618",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000551593",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "M&J CONSTRUCTION GROUP LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-28",
+    "zip": "33570",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000551653",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "ESTUARY LENDING LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-28",
+    "zip": "33607",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000551813",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "DMY AIR CONDITIONING MAINTENANCE LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-28",
+    "zip": "33612",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000551843",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "DOTY GROUP LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-28",
+    "zip": "33572",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000550954",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "1MBURIEDBUTALIVE LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-11-01",
+    "zip": "33596",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000551054",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "EAZY MONEY RENTALS & TRANSPORT LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-27",
+    "zip": "33604",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000551194",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "VARELA AUTOPART LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-28",
+    "zip": "33634",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000551464",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "FIX & SHINE FLORIDA, LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-28",
+    "zip": "33510",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000551534",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "ELEVATION BUSINESS PARTNERS LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-28",
+    "zip": "33647",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000551744",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "PDBD MILTON LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-28",
+    "zip": "33629",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000550905",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "DIORS WATER ICE LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-23",
+    "zip": "33647",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000550935",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "DIXON SALES TEAM LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-26",
+    "zip": "33611",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000550995",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "PRIVATE FORTUNE LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-28",
+    "zip": "33510",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000551175",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "EPG ADS LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-28",
+    "zip": "33511",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000551475",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "COASTAL SANDS VACATION RENTALS LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-28",
+    "zip": "33594",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000551585",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "TKL IICONIC LEGACY LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-27",
+    "zip": "33570",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000550966",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "VELVET BODY SPA LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-28",
+    "zip": "33625",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000551096",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "CURTLEY'S FAMILY CARE LLC.",
+    "entityType": "Florida LLC",
+    "date": "2026-10-23",
+    "zip": "33579",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000551126",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "MOLLY MOLLOY CATLETT, LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-28",
+    "zip": "33629",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000551266",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "WILLIAN FENCING LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-28",
+    "zip": "33592",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000551286",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "SEAN SOLUTIONS LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-28",
+    "zip": "33511",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000551296",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "GATTOMEDIA LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-28",
+    "zip": "33603",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000551396",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "IVAPE LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-28",
+    "zip": "33626",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000551426",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "ENCOUNTERMARK LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-28",
+    "zip": "33602",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000551546",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "ARCHWELL PODIATRY LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-28",
+    "zip": "33624",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000550927",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "FIVE GUYS AUTO SALES AND RENTAL'S LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-28",
+    "zip": "33613",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000551187",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "SLAMMIN SLOTS INSHORE CHARTERS LIMITED LIABILITY COMPANY",
+    "entityType": "Florida LLC",
+    "date": "2026-10-28",
+    "zip": "33572",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000551367",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "ZURY PEARL CLEANING LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-28",
+    "zip": "33604",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000550888",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "NICE & EASY CLEANING SERVICES LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-28",
+    "zip": "33607",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000550918",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "RYHD LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-28",
+    "zip": "33616",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000551008",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "STAPLETON FROST FUNDS, LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-28",
+    "zip": "33602",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000551088",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "PRAXISPRING LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-22",
+    "zip": "33596",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000551478",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "SINCERAE MORNING STAR TRANSPORTATION  LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-28",
+    "zip": "33511",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000551488",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "R.C.V TRANSPORT, LLC.",
+    "entityType": "Florida LLC",
+    "date": "2026-11-01",
+    "zip": "33619",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000551728",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "TSAR II LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-28",
+    "zip": "33603",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000550949",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "FLASHHIDER LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-28",
+    "zip": "33602",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000550979",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "BOOKS 'N BEANS, LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-23",
+    "zip": "33573",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000551159",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "STEELPOINT SOUTHERN FABRICATION, LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-28",
+    "zip": "33860",
+    "zipCoverage": "partial"
+  },
+  {
+    "id": "L26000551229",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "BARNA BROS, LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-28",
+    "zip": "33609",
+    "zipCoverage": "full"
+  },
+  {
+    "id": "L26000551299",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "LON LYNN DO LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-10-28",
+    "zip": "33558",
+    "zipCoverage": "partial"
+  },
+  {
+    "id": "L26000551769",
+    "source": "sunbiz",
+    "type": "business",
+    "name": "LEDGERSTONE SOLUTIONS LLC",
+    "entityType": "Florida LLC",
+    "date": "2026-11-01",
+    "zip": "33615",
+    "zipCoverage": "full"
+  }
+]

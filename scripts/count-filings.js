@@ -5,6 +5,10 @@
  * Downloads one recent daily Florida Sunbiz corporate filings file and counts
  * recent new business filings in Hillsborough County, FL.
  *
+ * Pass --write-json to also write those filings as Opportunity records to
+ * public/opportunities.json (see SPEC.md's Data Model), e.g.:
+ *   node scripts/count-filings.js --write-json
+ *
  * Sources (official, public):
  * - Sunbiz SFTP server + public credentials: https://dos.fl.gov/sunbiz/other-services/data-downloads/daily-data/
  * - Corporate file fixed-width record layout: https://dos.sunbiz.org/data-definitions/cor.html
@@ -25,6 +29,8 @@ import dotenv from "dotenv";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = path.join(__dirname, "..", "data");
+const OPPORTUNITIES_FILE = path.join(__dirname, "..", "public", "opportunities.json");
+const WRITE_JSON = process.argv.includes("--write-json");
 
 dotenv.config({ path: path.join(__dirname, "..", ".env") });
 
@@ -52,6 +58,7 @@ const HILLSBOROUGH_COUNTY_FIPS = "12057";
 // Positions below are 1-based column start, matching the published spec.
 const RECORD_LENGTH = 1440;
 const FIELDS = {
+  DOCUMENT_NUMBER: { start: 1, length: 12 },
   NAME: { start: 13, length: 192 },
   FILING_TYPE: { start: 206, length: 15 },
   PRINCIPAL_ADDRESS_1: { start: 221, length: 42 },
@@ -60,6 +67,22 @@ const FIELDS = {
 };
 // Everything officer/registered-agent related starts at column 545 and is
 // never referenced by this script.
+
+// Sunbiz filing type codes (column 206) mapped to readable entity-type
+// labels. Falls back to the raw code for any type not seen/mapped yet.
+const ENTITY_TYPE_LABELS = {
+  FLAL: "Florida LLC",
+  DOMP: "Florida Corporation",
+  DOMNP: "Florida Nonprofit Corporation",
+  DOMLP: "Florida Limited Partnership",
+  FORL: "Foreign LLC",
+  FORP: "Foreign Corporation",
+  FORNP: "Foreign Nonprofit Corporation",
+};
+
+function entityTypeLabel(filingType) {
+  return ENTITY_TYPE_LABELS[filingType] || filingType;
+}
 
 const WITHIN_DAYS = 30;
 const TOP_N_ADDRESSES = 10;
@@ -203,6 +226,7 @@ async function parseCorporateFile(localPath) {
   const records = [];
   for (const line of lines) {
     records.push({
+      documentNumber: extractField(line, FIELDS.DOCUMENT_NUMBER).trim(),
       name: extractField(line, FIELDS.NAME).trim(),
       filingType: extractField(line, FIELDS.FILING_TYPE).trim(),
       principalAddress1: extractField(line, FIELDS.PRINCIPAL_ADDRESS_1).trim(),
@@ -211,6 +235,26 @@ async function parseCorporateFile(localPath) {
     });
   }
   return records;
+}
+
+// Writes new Hillsborough filings as Opportunity records (see SPEC.md's
+// Data Model) to public/opportunities.json, which is meant to be committed
+// so the live site can read it — unlike the raw files in data/.
+async function writeOpportunitiesJson(filings) {
+  const opportunities = filings.map((r) => ({
+    id: r.documentNumber,
+    source: "sunbiz",
+    type: "business",
+    name: r.name,
+    entityType: entityTypeLabel(r.filingType),
+    date: r.fileDate.toISOString().slice(0, 10),
+    zip: r.zip5,
+    zipCoverage: r.zipCoverage,
+  }));
+
+  await fs.promises.mkdir(path.dirname(OPPORTUNITIES_FILE), { recursive: true });
+  await fs.promises.writeFile(OPPORTUNITIES_FILE, JSON.stringify(opportunities, null, 2) + "\n");
+  return opportunities;
 }
 
 async function main() {
@@ -280,6 +324,14 @@ async function main() {
     `  These ${TOP_N_ADDRESSES} addresses cover ${topAddressTotal} of ${newHillsboroughFilings.length} new Hillsborough filings (${topAddressPercent.toFixed(1)}%).`
   );
   console.log("");
+
+  if (WRITE_JSON) {
+    const opportunities = await writeOpportunitiesJson(newHillsboroughFilings);
+    console.log(
+      `Wrote ${opportunities.length} opportunities to public/opportunities.json`
+    );
+    console.log("");
+  }
 }
 
 main().catch((err) => {

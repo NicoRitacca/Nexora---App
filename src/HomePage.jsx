@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
 import { loadProfile } from './storage.js'
 import { fetchOpportunities } from './opportunities.js'
+import { fetchEvents } from './events.js'
 
 const MAX_OPPORTUNITIES = 10
+const MAX_EVENTS = 10
 
 function getGreeting() {
   const hour = new Date().getHours()
@@ -26,8 +28,22 @@ function formatDate(dateStr) {
   return date.toLocaleDateString('en-US', options)
 }
 
+function formatTime(timeStr) {
+  const [hour, minute] = timeStr.split(':').map(Number)
+  const date = new Date(2000, 0, 1, hour, minute)
+  return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
+}
+
+function getTodayStr() {
+  const now = new Date()
+  const month = String(now.getMonth() + 1).padStart(2, '0')
+  const day = String(now.getDate()).padStart(2, '0')
+  return `${now.getFullYear()}-${month}-${day}`
+}
+
 function HomePage() {
   const [opportunities, setOpportunities] = useState([])
+  const [events, setEvents] = useState([])
   const [loaded, setLoaded] = useState(false)
   const [hideBorderArea, setHideBorderArea] = useState(false)
 
@@ -38,6 +54,10 @@ function HomePage() {
       .then(setOpportunities)
       .catch(() => setOpportunities([]))
       .finally(() => setLoaded(true))
+
+    fetchEvents()
+      .then(setEvents)
+      .catch(() => setEvents([]))
   }, [])
 
   const matched = useMemo(() => {
@@ -49,17 +69,29 @@ function HomePage() {
       .slice(0, MAX_OPPORTUNITIES)
   }, [opportunities, profile])
 
+  const matchedEvents = useMemo(() => {
+    const cities = new Set(profile.cities)
+    const todayStr = getTodayStr()
+    return events
+      .filter((e) => cities.has(e.city) && e.date >= todayStr)
+      .sort((a, b) =>
+        a.date === b.date ? a.startTime.localeCompare(b.startTime) : a.date.localeCompare(b.date)
+      )
+      .slice(0, MAX_EVENTS)
+  }, [events, profile])
+
   const visible = hideBorderArea ? matched.filter((o) => o.zipCoverage !== 'partial') : matched
   const greeting = getGreeting()
   const count = matched.length
+  const eventCount = matchedEvents.length
 
   return (
     <div className="feed">
       <p className="description">
         {greeting}{' '}
-        {count === 0
-          ? "We didn't find any new opportunities matching your coverage area yet."
-          : `We found ${count} new opportunit${count === 1 ? 'y' : 'ies'} that might be worth your time.`}
+        {count === 0 && eventCount === 0
+          ? "We didn't find any new businesses or upcoming events matching your coverage area yet."
+          : `We found ${count} new business${count === 1 ? '' : 'es'} and ${eventCount} upcoming event${eventCount === 1 ? '' : 's'} that might be worth your time.`}
       </p>
 
       {matched.length > 0 && (
@@ -89,6 +121,32 @@ function HomePage() {
             </li>
           ))}
         </ul>
+      )}
+
+      {loaded && matchedEvents.length > 0 && (
+        <section className="events-section">
+          <h2 className="section-title">Upcoming events</h2>
+          <ul className="event-list">
+            {matchedEvents.map((e) => (
+              <li key={e.id} className="event-card">
+                <div className="event-name">{e.name}</div>
+                <div className="event-meta">
+                  {e.eventType} · {formatDate(e.date)}, {formatTime(e.startTime)}–{formatTime(e.endTime)}
+                </div>
+                <div className="event-meta">
+                  {e.venue ? `${e.venue} · ` : ''}
+                  {e.city}
+                </div>
+                <div className="event-meta">{e.hostingOrg}</div>
+                {e.url && (
+                  <a className="event-link" href={e.url} target="_blank" rel="noopener noreferrer">
+                    Event page
+                  </a>
+                )}
+              </li>
+            ))}
+          </ul>
+        </section>
       )}
     </div>
   )

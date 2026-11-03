@@ -1,5 +1,17 @@
+async function fetchEventsFile(path) {
+  try {
+    const res = await fetch(path)
+    if (!res.ok) return []
+    return await res.json()
+  } catch {
+    return []
+  }
+}
+
 export async function fetchEvents() {
-  const res = await fetch('/events.json')
-  if (!res.ok) throw new Error('Failed to load events')
-  return res.json()
+  const [handEntered, rssEvents] = await Promise.all([
+    fetchEventsFile('/events.json'),
+    fetchEventsFile('/events-feed.json'),
+  ])
+  return [...handEntered, ...rssEvents]
 }

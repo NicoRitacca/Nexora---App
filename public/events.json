@@ -12,6 +12,10 @@
     "city": "Tampa",
     "zip": "33605",
     "hostingOrg": "Tampa Bay Chamber",
+    "tags": [
+      { "type": "cost", "label": "Cost unknown" },
+      { "type": "format", "label": "Morning networking" }
+    ],
     "url": "https://www.tampabaychamber.com/events/"
   },
   {
@@ -27,6 +31,11 @@
     "city": "Tampa",
     "zip": "33602",
     "hostingOrg": "Tampa Bay Chamber",
+    "tags": [
+      { "type": "audience", "label": "Emerging professionals" },
+      { "type": "cost", "label": "Cost unknown" },
+      { "type": "format", "label": "Evening mixer" }
+    ],
     "url": "https://www.tampabaychamber.com/events/"
   },
   {
@@ -42,6 +51,10 @@
     "city": "Tampa",
     "zip": "",
     "hostingOrg": "Tampa Bay Chamber",
+    "tags": [
+      { "type": "cost", "label": "Cost unknown" },
+      { "type": "format", "label": "Afternoon networking" }
+    ],
     "url": "https://www.tampabaychamber.com/events/"
   },
   {
@@ -57,6 +70,11 @@
     "city": "Tampa",
     "zip": "33602",
     "hostingOrg": "ACG Tampa Bay",
+    "tags": [
+      { "type": "audience", "label": "Emerging professionals" },
+      { "type": "cost", "label": "Cost unknown" },
+      { "type": "format", "label": "Evening mixer" }
+    ],
     "url": "https://www.acg.org/tampabay/events"
   },
   {
@@ -72,6 +90,11 @@
     "city": "Tampa",
     "zip": "",
     "hostingOrg": "Digital Marketing Masters Club",
+    "tags": [
+      { "type": "audience", "label": "Small business owners" },
+      { "type": "cost", "label": "Cost unknown" },
+      { "type": "format", "label": "Small business mixer" }
+    ],
     "url": "https://www.eventbrite.com/e/tampa-digital-mixer-small-business-summit-local-business-owners-tech-tickets-2002557208518"
   },
   {
@@ -86,6 +109,11 @@
     "venue": "Entrepreneur Collaborative Center",
     "city": "Tampa",
     "zip": "",
-    "hostingOrg": "Entrepreneur Collaborative Center"
+    "hostingOrg": "Entrepreneur Collaborative Center",
+    "tags": [
+      { "type": "audience", "label": "Entrepreneurs" },
+      { "type": "cost", "label": "Cost unknown" },
+      { "type": "format", "label": "Entrepreneur showcase" }
+    ]
   }
 ]

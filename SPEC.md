@@ -33,7 +33,8 @@ Each week, know where to start a few new conversations, why, who could help intr
 
 ## Data Model
 
-- **Opportunity** — id, source, type ("business" or "event"), name, entity type, date, city, ZIP, ZIP coverage (full or partial). Designed so new sources and types can be added later. For events, hosting organization is used instead of entity type.
+- **Opportunity** — id, source, type ("business" or "event"), name, entity type, date, city, ZIP, ZIP coverage (full or partial). Designed so new sources and types can be added later. For events, hosting organization is used instead of entity type, plus venue, start/end time, a link to the event page if there is one, and tags.
+- **Tag** (events only) — type ("audience", "cost", or "format") and label (e.g. "Entrepreneurs", "Cost unknown", "Evening mixer"). Each tag may cite only what the event's own source actually states; cost defaults to "Cost unknown" rather than being guessed when no price is stated.
 - **Advisor Profile** — the fields from step 1 above.
 - **Action** — opportunity id, choice (conversation / save / skip), date.
 

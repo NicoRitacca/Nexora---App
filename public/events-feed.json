@@ -1,0 +1,142 @@
+[
+  {
+    "id": "wwtb-6801850",
+    "source": "wwtb-rss",
+    "type": "event",
+    "name": "Lutz Coffee Connections",
+    "eventType": "Coffee networking",
+    "date": "2026-11-05",
+    "startTime": "09:00",
+    "venue": "",
+    "city": "Lutz",
+    "zip": "",
+    "hostingOrg": "Working Women of Tampa Bay",
+    "tags": [
+      {
+        "type": "audience",
+        "label": "Women in business"
+      },
+      {
+        "type": "cost",
+        "label": "Cost unknown"
+      },
+      {
+        "type": "format",
+        "label": "Coffee networking"
+      }
+    ],
+    "url": "https://workingwomenoftampabay.com/event-6801850"
+  },
+  {
+    "id": "wwtb-6759530",
+    "source": "wwtb-rss",
+    "type": "event",
+    "name": "South Tampa Coffee Connections",
+    "eventType": "Coffee networking",
+    "date": "2026-11-10",
+    "startTime": "09:00",
+    "venue": "",
+    "city": "Tampa",
+    "zip": "",
+    "hostingOrg": "Working Women of Tampa Bay",
+    "tags": [
+      {
+        "type": "audience",
+        "label": "Women in business"
+      },
+      {
+        "type": "cost",
+        "label": "Cost unknown"
+      },
+      {
+        "type": "format",
+        "label": "Coffee networking"
+      }
+    ],
+    "url": "https://workingwomenoftampabay.com/event-6759530"
+  },
+  {
+    "id": "wwtb-6849493",
+    "source": "wwtb-rss",
+    "type": "event",
+    "name": "Plant City Coffee Connections",
+    "eventType": "Coffee networking",
+    "date": "2026-11-12",
+    "startTime": "09:00",
+    "venue": "",
+    "city": "Plant City",
+    "zip": "",
+    "hostingOrg": "Working Women of Tampa Bay",
+    "tags": [
+      {
+        "type": "audience",
+        "label": "Women in business"
+      },
+      {
+        "type": "cost",
+        "label": "Cost unknown"
+      },
+      {
+        "type": "format",
+        "label": "Coffee networking"
+      }
+    ],
+    "url": "https://workingwomenoftampabay.com/event-6849493"
+  },
+  {
+    "id": "wwtb-6759618",
+    "source": "wwtb-rss",
+    "type": "event",
+    "name": "Carrollwood Coffee Connections",
+    "eventType": "Coffee networking",
+    "date": "2026-11-19",
+    "startTime": "09:00",
+    "venue": "",
+    "city": "Tampa",
+    "zip": "",
+    "hostingOrg": "Working Women of Tampa Bay",
+    "tags": [
+      {
+        "type": "audience",
+        "label": "Women in business"
+      },
+      {
+        "type": "cost",
+        "label": "Cost unknown"
+      },
+      {
+        "type": "format",
+        "label": "Coffee networking"
+      }
+    ],
+    "url": "https://workingwomenoftampabay.com/event-6759618"
+  },
+  {
+    "id": "wwtb-6801851",
+    "source": "wwtb-rss",
+    "type": "event",
+    "name": "Lutz Coffee Connections",
+    "eventType": "Coffee networking",
+    "date": "2026-12-03",
+    "startTime": "09:00",
+    "venue": "",
+    "city": "Lutz",
+    "zip": "",
+    "hostingOrg": "Working Women of Tampa Bay",
+    "tags": [
+      {
+        "type": "audience",
+        "label": "Women in business"
+      },
+      {
+        "type": "cost",
+        "label": "Cost unknown"
+      },
+      {
+        "type": "format",
+        "label": "Coffee networking"
+      }
+    ],
+    "url": "https://workingwomenoftampabay.com/event-6801851"
+  }
+]

@@ -236,6 +236,42 @@ body {
   font-size: 0.95rem;
 }
 
+.event-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.4rem;
+}
+
+.tag {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+}
+
+.tag-audience {
+  background: rgba(147, 197, 253, 0.15);
+  border-color: rgba(147, 197, 253, 0.4);
+  color: #93c5fd;
+}
+
+.tag-cost {
+  background: rgba(110, 231, 183, 0.15);
+  border-color: rgba(110, 231, 183, 0.4);
+  color: #6ee7b7;
+}
+
+.tag-format {
+  background: rgba(196, 181, 253, 0.15);
+  border-color: rgba(196, 181, 253, 0.4);
+  color: #c4b5fd;
+}
+
 .event-meta {
   font-size: 0.85rem;
   color: #94a3b8;

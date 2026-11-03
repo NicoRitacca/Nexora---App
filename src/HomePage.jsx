@@ -34,6 +34,10 @@ function formatTime(timeStr) {
   return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
 }
 
+function visibleTags(tags) {
+  return (tags || []).filter((t) => !(t.type === 'cost' && t.label === 'Cost unknown'))
+}
+
 function getTodayStr() {
   const now = new Date()
   const month = String(now.getMonth() + 1).padStart(2, '0')
@@ -130,8 +134,18 @@ function HomePage() {
             {matchedEvents.map((e) => (
               <li key={e.id} className="event-card">
                 <div className="event-name">{e.name}</div>
+                {visibleTags(e.tags).length > 0 && (
+                  <div className="event-tags">
+                    {visibleTags(e.tags).map((t) => (
+                      <span key={t.type} className={`tag tag-${t.type}`}>
+                        {t.label}
+                      </span>
+                    ))}
+                  </div>
+                )}
                 <div className="event-meta">
-                  {e.eventType} · {formatDate(e.date)}, {formatTime(e.startTime)}–{formatTime(e.endTime)}
+                  {e.eventType} · {formatDate(e.date)}, {formatTime(e.startTime)}
+                  {e.endTime ? `–${formatTime(e.endTime)}` : ''}
                 </div>
                 <div className="event-meta">
                   {e.venue ? `${e.venue} · ` : ''}

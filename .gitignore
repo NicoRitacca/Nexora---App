@@ -2,5 +2,11 @@ node_modules
 dist
 .DS_Store
 *.local
-data/
+/data/
 .env
+
+# Amplify Gen 2 - generated per environment (sandbox vs. deployed branch),
+# never hand-edited, and amplify_outputs.json is not a secret itself but is
+# environment-specific output, not source.
+amplify_outputs.json
+.amplify/

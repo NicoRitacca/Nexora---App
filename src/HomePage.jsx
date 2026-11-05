@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from 'react'
 import { loadProfile } from './storage.js'
 import { fetchOpportunities } from './opportunities.js'
 import { fetchEvents } from './events.js'
+import { rankOpportunitiesBasic } from './rankingFallback.js'
+import { getAiRanking } from './aiRanking.js'
 
 const MAX_OPPORTUNITIES = 10
 const MAX_EVENTS = 10
@@ -50,6 +52,9 @@ function HomePage() {
   const [events, setEvents] = useState([])
   const [loaded, setLoaded] = useState(false)
   const [hideBorderArea, setHideBorderArea] = useState(false)
+  const [aiRanking, setAiRanking] = useState(null)
+  const [aiUnavailable, setAiUnavailable] = useState(false)
+  const [aiLoading, setAiLoading] = useState(false)
 
   const profile = useMemo(() => loadProfile(), [])
 
@@ -67,11 +72,51 @@ function HomePage() {
   const matched = useMemo(() => {
     const cities = new Set(profile.cities)
     const zips = new Set(parseZips(profile.zips || ''))
-    return opportunities
-      .filter((o) => cities.has(o.city) || zips.has(o.zip))
-      .sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0))
-      .slice(0, MAX_OPPORTUNITIES)
+    const filtered = opportunities.filter((o) => cities.has(o.city) || zips.has(o.zip))
+    return rankOpportunitiesBasic(filtered).slice(0, MAX_OPPORTUNITIES)
   }, [opportunities, profile])
+
+  useEffect(() => {
+    if (matched.length === 0) {
+      setAiRanking(null)
+      setAiUnavailable(false)
+      setAiLoading(false)
+      return
+    }
+    let cancelled = false
+    setAiUnavailable(false)
+    setAiLoading(true)
+    getAiRanking(matched, profile)
+      .then(({ ranking }) => {
+        if (cancelled) return
+        const byId = {}
+        ranking.forEach((r) => {
+          byId[r.id] = r
+        })
+        setAiRanking(byId)
+      })
+      .catch(() => {
+        if (cancelled) return
+        setAiRanking(null)
+        setAiUnavailable(true)
+      })
+      .finally(() => {
+        if (cancelled) return
+        setAiLoading(false)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [matched, profile])
+
+  const ranked = useMemo(() => {
+    if (!aiRanking) return matched
+    return [...matched].sort((a, b) => {
+      const rankA = aiRanking[a.id]?.rank ?? Number.MAX_SAFE_INTEGER
+      const rankB = aiRanking[b.id]?.rank ?? Number.MAX_SAFE_INTEGER
+      return rankA - rankB
+    })
+  }, [matched, aiRanking])
 
   const matchedEvents = useMemo(() => {
     const cities = new Set(profile.cities)
@@ -84,7 +129,7 @@ function HomePage() {
       .slice(0, MAX_EVENTS)
   }, [events, profile])
 
-  const visible = hideBorderArea ? matched.filter((o) => o.zipCoverage !== 'partial') : matched
+  const visible = hideBorderArea ? ranked.filter((o) => o.zipCoverage !== 'partial') : ranked
   const greeting = getGreeting()
   const count = matched.length
   const eventCount = matchedEvents.length
@@ -109,6 +154,15 @@ function HomePage() {
         </label>
       )}
 
+      {aiLoading && <p className="ai-note">Finding your best opportunities for this week…</p>}
+
+      {aiUnavailable && (
+        <p className="ai-note">
+          AI suggestions are unavailable right now — showing opportunities by newest filing in
+          your coverage area.
+        </p>
+      )}
+
       {loaded && (
         <ul className="opportunity-list">
           {visible.map((o) => (
@@ -122,6 +176,9 @@ function HomePage() {
               <div className="opportunity-meta">
                 {o.entityType} · {o.city} · {formatDate(o.date)}
               </div>
+              {aiRanking?.[o.id]?.reason && (
+                <div className="opportunity-reason">{aiRanking[o.id].reason}</div>
+              )}
             </li>
           ))}
         </ul>

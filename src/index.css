@@ -205,17 +205,100 @@ body {
   margin-top: 0.25rem;
 }
 
-.opportunity-reason {
+.ai-section {
+  margin-top: 0.5rem;
+}
+
+.ai-section-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #93c5fd;
+}
+
+.ai-section-body {
   font-size: 0.85rem;
   color: #cbd5e1;
-  margin-top: 0.4rem;
+  margin-top: 0.15rem;
+}
+
+.ai-section-subtle {
+  color: #94a3b8;
+}
+
+.ai-section-opener {
   font-style: italic;
+}
+
+.ai-toggle {
+  display: block;
+  margin-top: 0.6rem;
+  background: transparent;
+  border: 1px solid #475569;
+  color: #93c5fd;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.ai-toggle:focus-visible {
+  outline: 2px solid #93c5fd;
+  outline-offset: 2px;
+}
+
+.ai-details {
+  margin-top: 0.5rem;
 }
 
 .ai-note {
   font-size: 0.85rem;
   color: #fbbf24;
   margin: -1rem 0 1.5rem;
+}
+
+.mock-ai-label {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #0f172a;
+  background: #fbbf24;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  margin: -1rem 0 1.5rem;
+}
+
+.top-picks-section {
+  margin-bottom: 2rem;
+}
+
+.top-pick-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.top-pick-card {
+  border-color: #93c5fd;
+}
+
+.top-pick-rank {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #93c5fd;
+  margin-bottom: 0.25rem;
+}
+
+.more-businesses-section .section-title {
+  margin-top: 0;
 }
 
 .events-section {

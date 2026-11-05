@@ -3,10 +3,11 @@ import { loadProfile } from './storage.js'
 import { fetchOpportunities } from './opportunities.js'
 import { fetchEvents } from './events.js'
 import { rankOpportunitiesBasic } from './rankingFallback.js'
-import { getAiRanking } from './aiRanking.js'
+import { getAiRanking, isMockAi } from './aiRanking.js'
 
 const MAX_OPPORTUNITIES = 10
 const MAX_EVENTS = 10
+const MAX_TOP_PICKS = 5
 
 function getGreeting() {
   const hour = new Date().getHours()
@@ -47,6 +48,108 @@ function getTodayStr() {
   return `${now.getFullYear()}-${month}-${day}`
 }
 
+// Matches the "event" vs. "business" distinction used in
+// amplify/functions/rank-opportunities/prompt.js and scripts/test-ranking.js.
+function isEvent(item) {
+  return item.hostingOrg !== undefined
+}
+
+function BusinessContent({ o }) {
+  return (
+    <>
+      <div className="opportunity-name">
+        {o.name}
+        {o.zipCoverage === 'partial' && <span className="border-area-badge">Border area</span>}
+      </div>
+      <div className="opportunity-meta">
+        {o.entityType} · {o.city} · {formatDate(o.date)}
+      </div>
+    </>
+  )
+}
+
+function EventContent({ e }) {
+  return (
+    <>
+      <div className="event-name">{e.name}</div>
+      {visibleTags(e.tags).length > 0 && (
+        <div className="event-tags">
+          {visibleTags(e.tags).map((t) => (
+            <span key={t.type} className={`tag tag-${t.type}`}>
+              {t.label}
+            </span>
+          ))}
+        </div>
+      )}
+      <div className="event-meta">
+        {e.eventType} · {formatDate(e.date)}, {formatTime(e.startTime)}
+        {e.endTime ? `–${formatTime(e.endTime)}` : ''}
+      </div>
+      <div className="event-meta">
+        {e.venue ? `${e.venue} · ` : ''}
+        {e.city}
+      </div>
+      <div className="event-meta">{e.hostingOrg}</div>
+      {e.url && (
+        <a className="event-link" href={e.url} target="_blank" rel="noopener noreferrer">
+          Event page
+        </a>
+      )}
+    </>
+  )
+}
+
+function AiSections({ entry }) {
+  const [expanded, setExpanded] = useState(false)
+  if (!entry) return null
+
+  const hasWarmPath = entry.warmPath && entry.warmPath !== 'none'
+  const hasDetails = hasWarmPath || entry.howToStart
+
+  return (
+    <>
+      {entry.reason && (
+        <div className="ai-section">
+          <div className="ai-section-title">Why it fits</div>
+          <div className="ai-section-body">{entry.reason}</div>
+        </div>
+      )}
+      {hasDetails && (
+        <>
+          <button
+            type="button"
+            className="ai-toggle"
+            aria-expanded={expanded}
+            onClick={() => setExpanded((prev) => !prev)}
+          >
+            {expanded ? 'Hide how to get started' : 'How to get started'}
+          </button>
+          {expanded && (
+            <div className="ai-details">
+              {hasWarmPath && (
+                <div className="ai-section">
+                  <div className="ai-section-title">Warm path</div>
+                  <div className="ai-section-body">{entry.warmPath}</div>
+                </div>
+              )}
+              {entry.howToStart && (
+                <div className="ai-section">
+                  <div className="ai-section-title">First step</div>
+                  <div className="ai-section-body">{entry.howToStart.firstStep}</div>
+                  <div className="ai-section-title">Why this approach</div>
+                  <div className="ai-section-body ai-section-subtle">{entry.howToStart.whyThisApproach}</div>
+                  <div className="ai-section-title">Opener</div>
+                  <div className="ai-section-body ai-section-opener">“{entry.howToStart.opener}”</div>
+                </div>
+              )}
+            </div>
+          )}
+        </>
+      )}
+    </>
+  )
+}
+
 function HomePage() {
   const [opportunities, setOpportunities] = useState([])
   const [events, setEvents] = useState([])
@@ -76,8 +179,23 @@ function HomePage() {
     return rankOpportunitiesBasic(filtered).slice(0, MAX_OPPORTUNITIES)
   }, [opportunities, profile])
 
+  const matchedEvents = useMemo(() => {
+    const cities = new Set(profile.cities)
+    const todayStr = getTodayStr()
+    return events
+      .filter((e) => cities.has(e.city) && e.date >= todayStr)
+      .sort((a, b) =>
+        a.date === b.date ? a.startTime.localeCompare(b.startTime) : a.date.localeCompare(b.date)
+      )
+      .slice(0, MAX_EVENTS)
+  }, [events, profile])
+
+  // Sent to the AI together, businesses first - same candidate set
+  // scripts/test-ranking.js builds for the Lambda/mock.
+  const aiCandidates = useMemo(() => [...matched, ...matchedEvents], [matched, matchedEvents])
+
   useEffect(() => {
-    if (matched.length === 0) {
+    if (aiCandidates.length === 0) {
       setAiRanking(null)
       setAiUnavailable(false)
       setAiLoading(false)
@@ -86,14 +204,10 @@ function HomePage() {
     let cancelled = false
     setAiUnavailable(false)
     setAiLoading(true)
-    getAiRanking(matched, profile)
+    getAiRanking(aiCandidates, profile)
       .then(({ ranking }) => {
         if (cancelled) return
-        const byId = {}
-        ranking.forEach((r) => {
-          byId[r.id] = r
-        })
-        setAiRanking(byId)
+        setAiRanking(ranking)
       })
       .catch(() => {
         if (cancelled) return
@@ -107,40 +221,60 @@ function HomePage() {
     return () => {
       cancelled = true
     }
-  }, [matched, profile])
+  }, [aiCandidates, profile])
 
-  const ranked = useMemo(() => {
-    if (!aiRanking) return matched
-    return [...matched].sort((a, b) => {
-      const rankA = aiRanking[a.id]?.rank ?? Number.MAX_SAFE_INTEGER
-      const rankB = aiRanking[b.id]?.rank ?? Number.MAX_SAFE_INTEGER
-      return rankA - rankB
+  const candidatesById = useMemo(() => {
+    const map = {}
+    aiCandidates.forEach((item) => {
+      map[item.id] = item
     })
-  }, [matched, aiRanking])
+    return map
+  }, [aiCandidates])
 
-  const matchedEvents = useMemo(() => {
-    const cities = new Set(profile.cities)
-    const todayStr = getTodayStr()
-    return events
-      .filter((e) => cities.has(e.city) && e.date >= todayStr)
-      .sort((a, b) =>
-        a.date === b.date ? a.startTime.localeCompare(b.startTime) : a.date.localeCompare(b.date)
-      )
-      .slice(0, MAX_EVENTS)
-  }, [events, profile])
+  // The AI's top picks, in rank order, each paired with its matching
+  // business or event. Empty whenever there's no AI ranking to show yet -
+  // callers fall back to the plain business/event lists in that case.
+  const topPicks = useMemo(() => {
+    if (!aiRanking) return []
+    return [...aiRanking]
+      .sort((a, b) => a.rank - b.rank)
+      .map((entry) => ({ item: candidatesById[entry.id], entry }))
+      .filter((pick) => pick.item)
+      .slice(0, MAX_TOP_PICKS)
+  }, [aiRanking, candidatesById])
 
-  const visible = hideBorderArea ? ranked.filter((o) => o.zipCoverage !== 'partial') : ranked
+  const topPickIds = useMemo(() => new Set(topPicks.map((pick) => pick.item.id)), [topPicks])
+
+  const remainingBusinesses = useMemo(
+    () => matched.filter((o) => !topPickIds.has(o.id)),
+    [matched, topPickIds]
+  )
+
+  const remainingEvents = useMemo(
+    () => matchedEvents.filter((e) => !topPickIds.has(e.id)),
+    [matchedEvents, topPickIds]
+  )
+
+  const visibleBusinesses = hideBorderArea
+    ? remainingBusinesses.filter((o) => o.zipCoverage !== 'partial')
+    : remainingBusinesses
+
   const greeting = getGreeting()
-  const count = matched.length
-  const eventCount = matchedEvents.length
+  const hasTopPicks = topPicks.length > 0
+  const totalCount = matched.length
+  const totalEventCount = matchedEvents.length
+  const otherBusinessCount = remainingBusinesses.length
+  const otherEventCount = remainingEvents.length
 
   return (
     <div className="feed">
       <p className="description">
         {greeting}{' '}
-        {count === 0 && eventCount === 0
-          ? "We didn't find any new businesses or upcoming events matching your coverage area yet."
-          : `We found ${count} new business${count === 1 ? '' : 'es'} and ${eventCount} upcoming event${eventCount === 1 ? '' : 's'} that might be worth your time.`}
+        {hasTopPicks
+          ? `Here are your ${topPicks.length} best opportunit${topPicks.length === 1 ? 'y' : 'ies'} this week, plus ${otherBusinessCount} more new business${otherBusinessCount === 1 ? '' : 'es'} and ${otherEventCount} upcoming event${otherEventCount === 1 ? '' : 's'}.`
+          : totalCount === 0 && totalEventCount === 0
+            ? "We didn't find any new businesses or upcoming events matching your coverage area yet."
+            : `We found ${totalCount} new business${totalCount === 1 ? '' : 'es'} and ${totalEventCount} upcoming event${totalEventCount === 1 ? '' : 's'} that might be worth your time.`}
       </p>
 
       {matched.length > 0 && (
@@ -154,6 +288,8 @@ function HomePage() {
         </label>
       )}
 
+      {isMockAi && <p className="mock-ai-label">Preview: sample AI suggestions</p>}
+
       {aiLoading && <p className="ai-note">Finding your best opportunities for this week…</p>}
 
       {aiUnavailable && (
@@ -163,57 +299,41 @@ function HomePage() {
         </p>
       )}
 
-      {loaded && (
-        <ul className="opportunity-list">
-          {visible.map((o) => (
-            <li key={o.id} className="opportunity-card">
-              <div className="opportunity-name">
-                {o.name}
-                {o.zipCoverage === 'partial' && (
-                  <span className="border-area-badge">Border area</span>
-                )}
-              </div>
-              <div className="opportunity-meta">
-                {o.entityType} · {o.city} · {formatDate(o.date)}
-              </div>
-              {aiRanking?.[o.id]?.reason && (
-                <div className="opportunity-reason">{aiRanking[o.id].reason}</div>
-              )}
-            </li>
-          ))}
-        </ul>
+      {loaded && hasTopPicks && (
+        <section className="top-picks-section">
+          <h2 className="section-title">Your top picks this week</h2>
+          <ul className="top-pick-list">
+            {topPicks.map(({ item, entry }, index) => (
+              <li key={item.id} className="opportunity-card top-pick-card">
+                <div className="top-pick-rank">#{index + 1}</div>
+                {isEvent(item) ? <EventContent e={item} /> : <BusinessContent o={item} />}
+                <AiSections entry={entry} />
+              </li>
+            ))}
+          </ul>
+        </section>
       )}
 
-      {loaded && matchedEvents.length > 0 && (
+      {loaded && visibleBusinesses.length > 0 && (
+        <section className="more-businesses-section">
+          {hasTopPicks && <h2 className="section-title">More new businesses</h2>}
+          <ul className="opportunity-list">
+            {visibleBusinesses.map((o) => (
+              <li key={o.id} className="opportunity-card">
+                <BusinessContent o={o} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {loaded && remainingEvents.length > 0 && (
         <section className="events-section">
           <h2 className="section-title">Upcoming events</h2>
           <ul className="event-list">
-            {matchedEvents.map((e) => (
+            {remainingEvents.map((e) => (
               <li key={e.id} className="event-card">
-                <div className="event-name">{e.name}</div>
-                {visibleTags(e.tags).length > 0 && (
-                  <div className="event-tags">
-                    {visibleTags(e.tags).map((t) => (
-                      <span key={t.type} className={`tag tag-${t.type}`}>
-                        {t.label}
-                      </span>
-                    ))}
-                  </div>
-                )}
-                <div className="event-meta">
-                  {e.eventType} · {formatDate(e.date)}, {formatTime(e.startTime)}
-                  {e.endTime ? `–${formatTime(e.endTime)}` : ''}
-                </div>
-                <div className="event-meta">
-                  {e.venue ? `${e.venue} · ` : ''}
-                  {e.city}
-                </div>
-                <div className="event-meta">{e.hostingOrg}</div>
-                {e.url && (
-                  <a className="event-link" href={e.url} target="_blank" rel="noopener noreferrer">
-                    Event page
-                  </a>
-                )}
+                <EventContent e={e} />
               </li>
             ))}
           </ul>

@@ -1,12 +1,59 @@
 import { generateClient } from 'aws-amplify/data'
+import { amplifyOutputs } from './amplifyOutputs.js'
 
 const AI_TIMEOUT_MS = 20000
 const CACHE_KEY = 'nexora.aiRankingCache'
+const MOCK_RANKING_URL = '/mock-ai-ranking.json'
+
+// No deployed backend to configure Amplify with, or the mock is explicitly
+// requested - use the sample ranking saved by scripts/test-ranking.js
+// instead of calling the real backend.
+export const isMockAi = !amplifyOutputs || import.meta.env.VITE_USE_MOCK_AI === 'true'
 
 let client = null
 function getClient() {
   if (!client) client = generateClient()
   return client
+}
+
+let mockRankingPromise = null
+function loadMockRanking() {
+  if (!mockRankingPromise) {
+    mockRankingPromise = fetch(MOCK_RANKING_URL)
+      .then((res) => (res.ok ? res.json() : []))
+      .catch(() => [])
+  }
+  return mockRankingPromise
+}
+
+// Matches the "event" vs. "business" distinction used in
+// amplify/functions/rank-opportunities/prompt.js and src/HomePage.jsx.
+function serializeItem(o) {
+  if (o.hostingOrg !== undefined) {
+    return {
+      type: 'event',
+      id: o.id,
+      name: o.name,
+      eventType: o.eventType,
+      date: o.date,
+      startTime: o.startTime,
+      endTime: o.endTime,
+      venue: o.venue,
+      city: o.city,
+      hostingOrg: o.hostingOrg,
+      tags: o.tags,
+    }
+  }
+  return {
+    type: 'business',
+    id: o.id,
+    name: o.name,
+    entityType: o.entityType,
+    city: o.city,
+    zip: o.zip,
+    date: o.date,
+    zipCoverage: o.zipCoverage,
+  }
 }
 
 function getTodayStr() {
@@ -65,28 +112,25 @@ function withTimeout(promise, ms) {
   ])
 }
 
-// Returns { ranking, fromCache }. `ranking` is an array of
-// { id, rank, reason } for (at most) the opportunities passed in. Callers
-// are expected to already have capped `opportunities` to a small list -
-// this function does not grow or re-fetch a larger set.
+// Returns { ranking, fromCache, isMock }. `ranking` is an array of
+// { id, rank, reason, warmPath, howToStart } for (at most) the opportunities
+// passed in. Callers are expected to already have capped `opportunities` to
+// a small list - this function does not grow or re-fetch a larger set.
 export async function getAiRanking(opportunities, profile) {
-  if (opportunities.length === 0) return { ranking: [], fromCache: false }
+  if (opportunities.length === 0) return { ranking: [], fromCache: false, isMock: isMockAi }
+
+  if (isMockAi) {
+    const ranking = await loadMockRanking()
+    return { ranking, fromCache: false, isMock: true }
+  }
 
   const cached = readCache(profile, opportunities)
-  if (cached) return { ranking: cached, fromCache: true }
+  if (cached) return { ranking: cached, fromCache: true, isMock: false }
 
   const result = await withTimeout(
     getClient().queries.rankOpportunities({
       input: {
-        opportunities: opportunities.map((o) => ({
-          id: o.id,
-          name: o.name,
-          entityType: o.entityType,
-          city: o.city,
-          zip: o.zip,
-          date: o.date,
-          zipCoverage: o.zipCoverage,
-        })),
+        opportunities: opportunities.map(serializeItem),
         profile: {
           specialties: profile.specialties,
           currentClients: profile.currentClients,
@@ -103,5 +147,5 @@ export async function getAiRanking(opportunities, profile) {
 
   const ranking = result.data || []
   writeCache(profile, opportunities, ranking)
-  return { ranking, fromCache: false }
+  return { ranking, fromCache: false, isMock: false }
 }

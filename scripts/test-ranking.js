@@ -150,6 +150,14 @@ async function main() {
   console.log(`=== Top ${selected.length} result(s) ===`);
   selected.forEach((item) => printResult(item, byId[item.id]));
   console.log("");
+
+  // Save the same shape the real backend returns (an array of
+  // { id, rank, reason, warmPath, howToStart }, already capped to
+  // MAX_RESULTS) so the frontend's mock-AI path can load it directly in
+  // place of a live rankOpportunities call.
+  const mockPath = path.join(ROOT_DIR, "public/mock-ai-ranking.json");
+  fs.writeFileSync(mockPath, JSON.stringify(ranking, null, 2) + "\n");
+  console.log(`Saved ${ranking.length} result(s) to public/mock-ai-ranking.json for the mock AI feed.`);
 }
 
 main().catch((err) => {

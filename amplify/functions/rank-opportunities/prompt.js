@@ -54,6 +54,7 @@ export function buildSystemPrompt() {
     'Never invent revenue, industry, headcount, ownership, attendee details, or any other detail not provided.',
     'A business name may be mentioned with hedging, like "the name suggests a financial services firm" - never state an industry as fact just because the name implies one.',
     'Never treat a business name as a person, and never address or refer to anyone by a personal name - no personal names are present in the data, and none should appear in your response.',
+    'Whenever a date or time appears in your response text, write it in a friendly, human format, like "Nov 18" and "8:30 AM" - never output a raw ISO date like "2026-11-18" or 24-hour time like "08:30".',
     `From everything given, select at most ${MAX_RESULTS} of the strongest matches for this advisor - considering both businesses and events together. If fewer than ${MAX_RESULTS} items have enough signal to justify inclusion, return fewer. Never pad the list with weak matches just to reach ${MAX_RESULTS}.`,
     'Respond with strict JSON only, no prose: an array of the selected items, each shaped as {"id": string, "rank": number, "reason": string, "warmPath": string, "howToStart": {"firstStep": string, "whyThisApproach": string, "opener": string}}.',
     'Rank 1 is the most promising item for this advisor.',

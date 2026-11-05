@@ -1,0 +1,57 @@
+[
+  {
+    "id": "evt-coffee-connection",
+    "rank": 1,
+    "reason": "A Tampa Bay Chamber morning networking event at a set venue fits an advisor who prefers in-person introductions and already works with a chamber of commerce.",
+    "warmPath": "The chamber of commerce in your existing network could introduce you to the Tampa Bay Chamber organizers or attendees.",
+    "howToStart": {
+      "firstStep": "Attend the Coffee Connection on Nov 18 at 8:30 AM at Lions World Vision Institute and introduce yourself to the chamber's member contacts.",
+      "whyThisApproach": "Your stated preference is in-person outreach, and a chamber morning event is a low-pressure way to meet small-business owners face to face.",
+      "opener": "I work with small businesses on retirement plans, and I'd love to hear what you're focusing on this year."
+    }
+  },
+  {
+    "id": "evt-tampa-digital-mixer-small-business-summit",
+    "rank": 2,
+    "reason": "This small business mixer is explicitly aimed at small business owners, which matches your small-business retirement plan specialty.",
+    "warmPath": "Your CPA firm serving small businesses may already have clients or contacts who attend small business events like this one.",
+    "howToStart": {
+      "firstStep": "Ask your CPA firm contact whether any of their small-business clients plan to attend the Nov 5 mixer at 6:00 PM at Embarc Collective, then attend and introduce yourself.",
+      "whyThisApproach": "Your CPA firm is an existing introduction source, and combining an introduction with an in-person attendance fits your preferred outreach style.",
+      "opener": "Are you planning to take part in the summit, and are you handling retirement benefits for your team right now?"
+    }
+  },
+  {
+    "id": "evt-get-connected",
+    "rank": 3,
+    "reason": "This Tampa Bay Chamber afternoon networking event offers another in-person chance to meet local business people through the chamber.",
+    "warmPath": "The chamber of commerce in your existing network could confirm the event details and introduce you to attendees.",
+    "howToStart": {
+      "firstStep": "Contact your chamber of commerce contact to confirm the venue and registration for the Dec 2 Get Connected event at 3:00 PM, then plan to attend.",
+      "whyThisApproach": "The venue is not listed in the data, so checking with your chamber contact first is a reliable way to get attendance details and a warm introduction.",
+      "opener": "I'm planning to attend Get Connected, and I'd like to meet business owners who are thinking about retirement plans for their staff."
+    }
+  },
+  {
+    "id": "L26000551002",
+    "rank": 4,
+    "reason": "LINAN FINANCIAL LLC was filed recently in Tampa, and the name suggests a financial services firm, which could mean it is a potential peer or a business that may need retirement planning.",
+    "warmPath": "Your estate planning attorney's office may have referral relationships with newly formed financial businesses in Tampa.",
+    "howToStart": {
+      "firstStep": "Check whether LINAN FINANCIAL LLC has a public website or online listing that describes its services before reaching out.",
+      "whyThisApproach": "The filing does not confirm its line of work, so checking its public online presence first is safer than assuming its business and fits your preference for well-informed introductions.",
+      "opener": "I saw that LINAN FINANCIAL is newly set up in Tampa, and I work with small businesses on retirement plans, so I wanted to introduce myself."
+    }
+  },
+  {
+    "id": "L26000551769",
+    "rank": 5,
+    "reason": "LEDGERSTONE SOLUTIONS LLC was filed recently in Tampa, and the name hints at a services business that may later need an employee retirement plan, though this is not confirmed.",
+    "warmPath": "Your CPA firm serving small businesses may be able to introduce you if it works with newly formed Tampa companies.",
+    "howToStart": {
+      "firstStep": "Check whether LEDGERSTONE SOLUTIONS LLC has a public website or online listing that explains what it does before contacting it.",
+      "whyThisApproach": "The filing only shows a legal structure and city, so confirming its line of work online matches your introduction-based approach without making assumptions.",
+      "opener": "I noticed LEDGERSTONE SOLUTIONS is newly formed in Tampa, and I help small businesses set up retirement plans for their teams."
+    }
+  }
+]

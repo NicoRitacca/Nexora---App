@@ -125,6 +125,7 @@ body {
 /* Landing page */
 
 .landing {
+  position: relative;
   display: flex;
   flex-direction: column;
 }
@@ -139,56 +140,41 @@ body {
   margin-left: -50vw;
 }
 
-.landing-hero {
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 85vh;
-  padding: 3rem 1.5rem;
-  background:
-    radial-gradient(ellipse 50% 55% at 15% 20%, rgba(124, 58, 237, 0.14), transparent 70%),
-    radial-gradient(ellipse 50% 55% at 85% 75%, rgba(37, 99, 235, 0.1), transparent 70%);
-}
-
-.landing-hero-inner {
-  position: relative;
-  z-index: 1;
-  max-width: 42rem;
-  margin: 0 auto;
-  text-align: center;
-}
-
-.connection-art {
-  display: none;
+/* One continuous backdrop behind the whole page - full browser width,
+   sized to .landing's full height - sitting beneath the hero and every
+   tile below it (z-index: 0; the hero and .landing-tiles sit above it by
+   virtue of being positioned/stacked later in the same context). */
+.landing-backdrop {
   position: absolute;
   top: 0;
-  bottom: 0;
-  width: 10rem;
+  left: 50%;
+  width: 100vw;
   height: 100%;
+  margin-left: -50vw;
+  z-index: 0;
+  pointer-events: none;
+  /* A couple more soft purple glows further down the page, echoing the
+     one in the hero, so there's a bit more depth behind the tiles as you
+     scroll - visible in the gaps between tiles, since the tiles
+     themselves are opaque. */
+  background:
+    radial-gradient(ellipse 45% 32% at 22% 45%, rgba(124, 58, 237, 0.12), transparent 70%),
+    radial-gradient(ellipse 45% 32% at 78% 78%, rgba(124, 58, 237, 0.1), transparent 70%);
+}
+
+.connection-field {
+  display: block;
   color: var(--color-primary);
   opacity: 0.6;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.connection-art-left {
-  left: 0;
-}
-
-.connection-art-right {
-  right: 0;
-  transform: scaleX(-1);
 }
 
 .connection-lines line {
-  opacity: 0.35;
+  opacity: 0.5;
 }
 
-.connection-dots circle {
+.connection-dots circle,
+.connection-loose-stars circle {
   fill: currentColor;
-  opacity: 0.4;
 }
 
 .glow-dot {
@@ -217,13 +203,81 @@ body {
   }
 }
 
-/* Only shown once the viewport is comfortably wider than the centered
-   hero text plus the decoration zones on each side, so the lines/dots
-   never land behind the headline or paragraph. */
-@media (min-width: 1100px) {
-  .connection-art {
-    display: block;
+@media (max-width: 760px) {
+  .connection-field {
+    display: none;
   }
+}
+
+.landing-hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  min-height: 85vh;
+  padding: 3rem clamp(1.5rem, 5vw, 4rem);
+  background:
+    linear-gradient(to bottom, transparent 70%, var(--color-bg) 100%),
+    radial-gradient(ellipse 50% 55% at 15% 20%, rgba(124, 58, 237, 0.14), transparent 70%),
+    radial-gradient(ellipse 50% 55% at 85% 75%, rgba(37, 99, 235, 0.1), transparent 70%);
+}
+
+.landing-hero-text {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 32rem;
+  max-width: 42rem;
+}
+
+.landing-hero-sample {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 24rem;
+  display: flex;
+  justify-content: center;
+}
+
+.sample-pick {
+  width: 100%;
+  max-width: 32rem;
+}
+
+.sample-pick-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin: 0 0.25rem 0.75rem;
+}
+
+.sample-pick .opportunity-card {
+  padding: 1.75rem 2rem;
+  box-shadow: 0 24px 48px -20px rgba(91, 33, 182, 0.4);
+}
+
+.sample-pick .top-pick-rank {
+  font-size: 0.85rem;
+}
+
+.sample-pick .tag {
+  font-size: 0.78rem;
+}
+
+.sample-pick .event-name {
+  font-size: 1.3rem;
+}
+
+.sample-pick .event-meta {
+  font-size: 1rem;
+}
+
+.sample-pick .ai-section-title {
+  font-size: 0.82rem;
+}
+
+.sample-pick .ai-section-body {
+  font-size: 1rem;
 }
 
 .landing-headline {
@@ -259,28 +313,50 @@ body {
   background: var(--color-primary-hover);
 }
 
-/* Alternating full-width scroll sections */
+/* Tiles: "How it works", each feature section, and the closing section
+   float as white rounded cards over the backdrop. The wrapper is the one
+   positioned above the backdrop (z-index: 1); individual tiles just need
+   normal flow and gap to create the space the backdrop shows through. */
+.landing-tiles {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  padding: 3rem 0 4rem;
+}
 
-.landing-scroll-section {
-  padding: 5rem 1.5rem;
-  background: var(--color-bg);
+.landing-tile {
+  background: var(--color-surface);
+  border-radius: 1.5rem;
+  box-shadow: 0 24px 56px -28px rgba(34, 28, 53, 0.22);
   opacity: 0;
   transform: translateY(24px);
   transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
-.landing-scroll-section.is-visible {
+.landing-tile.is-visible {
   opacity: 1;
   transform: translateY(0);
 }
 
-.landing-scroll-section-reverse {
-  background: var(--color-surface);
+@media (prefers-reduced-motion: reduce) {
+  .landing-tile {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Alternating feature sections */
+
+.landing-scroll-section {
+  max-width: 70rem;
+  margin: 0 auto;
+  padding: 5rem clamp(1.5rem, 5vw, 4rem);
 }
 
 .landing-scroll-inner {
-  max-width: 70rem;
-  margin: 0 auto;
   display: flex;
   align-items: center;
   gap: 3.5rem;
@@ -364,12 +440,78 @@ body {
   font-size: 0.75rem;
 }
 
+/* How it works */
+
+.how-it-works {
+  max-width: 70rem;
+  margin: 0 auto;
+  padding: 5rem clamp(1.5rem, 5vw, 4rem);
+}
+
+.how-it-works-heading {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  margin: 0 0 2.5rem;
+  text-align: center;
+  color: var(--color-text);
+}
+
+.how-it-works-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+}
+
+.how-it-works-step {
+  text-align: left;
+}
+
+.how-it-works-number {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: var(--color-primary);
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+.how-it-works-step-heading {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 0.4rem;
+  color: var(--color-text);
+}
+
+.how-it-works-step-body {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+@media (max-width: 760px) {
+  .how-it-works-steps {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+  }
+}
+
 /* Closing section */
 
 .landing-closing {
-  padding: 5rem 1.5rem 6rem;
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: 5rem clamp(1.5rem, 5vw, 4rem) 6rem;
   text-align: center;
-  background: radial-gradient(ellipse 60% 80% at 50% 30%, rgba(124, 58, 237, 0.12), transparent 70%);
 }
 
 .landing-closing-inner {
@@ -388,6 +530,12 @@ body {
 @media (max-width: 760px) {
   .landing-hero {
     min-height: 70vh;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .landing-hero-sample {
+    width: 100%;
   }
 
   .landing-scroll-inner,
@@ -397,11 +545,11 @@ body {
   }
 
   .landing-scroll-section {
-    padding: 3.5rem 1.25rem;
+    padding-block: 3.5rem;
   }
 
   .landing-closing {
-    padding: 3.5rem 1.25rem 4rem;
+    padding-block: 3.5rem 4rem;
   }
 
   .landing-closing-heading {

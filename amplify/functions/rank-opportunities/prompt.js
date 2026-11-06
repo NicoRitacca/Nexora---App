@@ -34,6 +34,10 @@ export const MAX_EVENT_ITEMS = 10
 // list up to this number.
 export const MAX_RESULTS = 5
 
+// The labels Claude may use for `category` on each ranked item - validated
+// in parseRanking() below.
+export const CATEGORIES = ['Potential client', 'Potential referral partner', 'Networking event']
+
 function itemType(item) {
   if (item.type === 'business' || item.type === 'event') return item.type
   return item.hostingOrg !== undefined ? 'event' : 'business'
@@ -56,8 +60,9 @@ export function buildSystemPrompt() {
     'Never treat a business name as a person, and never address or refer to anyone by a personal name - no personal names are present in the data, and none should appear in your response.',
     'Whenever a date or time appears in your response text, write it in a friendly, human format, like "Nov 18" and "8:30 AM" - never output a raw ISO date like "2026-11-18" or 24-hour time like "08:30".',
     `From everything given, select at most ${MAX_RESULTS} of the strongest matches for this advisor - considering both businesses and events together. If fewer than ${MAX_RESULTS} items have enough signal to justify inclusion, return fewer. Never pad the list with weak matches just to reach ${MAX_RESULTS}.`,
-    'Respond with strict JSON only, no prose: an array of the selected items, each shaped as {"id": string, "rank": number, "reason": string, "warmPath": string, "howToStart": {"firstStep": string, "whyThisApproach": string, "opener": string}}.',
+    'Respond with strict JSON only, no prose: an array of the selected items, each shaped as {"id": string, "rank": number, "category": string, "reason": string, "warmPath": string, "howToStart": {"firstStep": string, "whyThisApproach": string, "opener": string}}.',
     'Rank 1 is the most promising item for this advisor.',
+    `category: exactly one of "${CATEGORIES.join('", "')}", chosen only from the facts given. Every event is "Networking event". A business is "Potential client" by default; call it "Potential referral partner" only when its stated entity type or name hints (still hedged, never stated as fact) suggest a profession that refers clients to advisors, such as a CPA, accounting, or legal practice.`,
     'reason: one short sentence, grounded only in the given facts, explaining why this item fits the advisor.',
     'warmPath: one short sentence naming the specific part of the advisor\'s network that could plausibly provide an introduction or connection here, grounded only in the network description given; if nothing in the network plausibly connects, use exactly "none".',
     'Watch for circular warm paths: if a network entry could plausibly be the same organization as the item\'s hosting org (for example, the network says "a local chamber of commerce" and the event\'s hosting org is "Tampa Bay Chamber"), that organization cannot be the connector that introduces the advisor to itself. In that case, phrase warmPath around the advisor\'s own standing with that organization instead - something like "your chamber membership gives you a natural reason to attend, and you can ask chamber staff to introduce you to a few attendees."',
@@ -110,6 +115,8 @@ export function buildUserPrompt(items, profile) {
   ].join('\n')
 }
 
+const VALID_CATEGORIES = new Set(CATEGORIES)
+
 export function parseRanking(text, items) {
   const validIds = new Set(items.map((item) => item.id))
   try {
@@ -123,6 +130,9 @@ export function parseRanking(text, items) {
         return {
           id: String(entry.id),
           rank: Number(entry.rank) || 0,
+          // Defensive fallback - Claude is asked for one of CATEGORIES, but
+          // don't trust it to always comply.
+          category: VALID_CATEGORIES.has(entry.category) ? entry.category : null,
           reason: String(entry.reason || '').slice(0, 300),
           warmPath: String(entry.warmPath || 'none').slice(0, 300),
           howToStart: {

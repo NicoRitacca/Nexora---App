@@ -100,6 +100,7 @@ function printResult(item, ranked) {
     console.log("   (Claude did not return a result for this item)");
     return;
   }
+  console.log(`   Category:        ${ranked.category ?? "(none)"}`);
   console.log(`   Why it fits:     ${ranked.reason}`);
   console.log(`   Warm path:       ${ranked.warmPath}`);
   console.log(`   First step:      ${ranked.howToStart.firstStep}`);

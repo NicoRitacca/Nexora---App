@@ -1,5 +1,12 @@
 import { useEffect, useMemo, useState } from 'react'
-import { loadProfile } from './storage.js'
+import {
+  loadProfile,
+  loadActionsThisWeek,
+  recordAction,
+  ACTION_CONVERSATION,
+  ACTION_SAVE,
+  ACTION_SKIP,
+} from './storage.js'
 import { fetchOpportunities } from './opportunities.js'
 import { fetchEvents } from './events.js'
 import { rankOpportunitiesBasic } from './rankingFallback.js'
@@ -21,6 +28,13 @@ function parseZips(zipsText) {
     .split(/[,\s]+/)
     .map((z) => z.trim())
     .filter(Boolean)
+}
+
+// "New conversations per week" is free text (e.g. "3 to 5") - the weekly
+// goal is the first number mentioned.
+function parseWeeklyGoal(text) {
+  const match = (text || '').match(/\d+/)
+  return match ? Number(match[0]) : null
 }
 
 function formatDate(dateStr) {
@@ -64,6 +78,26 @@ function isEvent(item) {
   return item.hostingOrg !== undefined
 }
 
+function BusinessSourceLine({ o }) {
+  return <div className="source-line">Source: Florida Sunbiz filing, filed {formatDate(o.date)}</div>
+}
+
+function EventSourceLine({ e }) {
+  return (
+    <div className="source-line">
+      Source: {e.hostingOrg}
+      {e.url && (
+        <>
+          {' · '}
+          <a className="event-link" href={e.url} target="_blank" rel="noopener noreferrer">
+            Event page
+          </a>
+        </>
+      )}
+    </div>
+  )
+}
+
 function BusinessContent({ o }) {
   return (
     <>
@@ -74,6 +108,7 @@ function BusinessContent({ o }) {
       <div className="opportunity-meta">
         {o.entityType} · {o.city} · {formatDate(o.date)}
       </div>
+      <BusinessSourceLine o={o} />
     </>
   )
 }
@@ -101,13 +136,31 @@ function EventContent({ e }) {
         {e.venue ? `${e.venue} · ` : ''}
         {e.city}
       </div>
-      <div className="event-meta">{e.hostingOrg}</div>
-      {e.url && (
-        <a className="event-link" href={e.url} target="_blank" rel="noopener noreferrer">
-          Event page
-        </a>
-      )}
+      <EventSourceLine e={e} />
     </>
+  )
+}
+
+const ACTION_LABELS = {
+  [ACTION_CONVERSATION]: 'Start a conversation',
+  [ACTION_SAVE]: 'Save for later',
+  [ACTION_SKIP]: 'Skip',
+}
+
+function ActionButtons({ id, action, onAction }) {
+  return (
+    <div className="action-buttons">
+      {[ACTION_CONVERSATION, ACTION_SAVE, ACTION_SKIP].map((choice) => (
+        <button
+          key={choice}
+          type="button"
+          className={`action-button${action === choice ? ' action-button-active' : ''}`}
+          onClick={() => onAction(id, choice)}
+        >
+          {ACTION_LABELS[choice]}
+        </button>
+      ))}
+    </div>
   )
 }
 
@@ -170,8 +223,14 @@ function HomePage() {
   const [aiRanking, setAiRanking] = useState(null)
   const [aiUnavailable, setAiUnavailable] = useState(false)
   const [aiLoading, setAiLoading] = useState(false)
+  const [actions, setActions] = useState(() => loadActionsThisWeek())
 
   const profile = useMemo(() => loadProfile(), [])
+
+  function handleAction(id, choice) {
+    recordAction(id, choice)
+    setActions(loadActionsThisWeek())
+  }
 
   useEffect(() => {
     fetchOpportunities()
@@ -187,20 +246,25 @@ function HomePage() {
   const matched = useMemo(() => {
     const cities = new Set(profile.cities)
     const zips = new Set(parseZips(profile.zips || ''))
-    const filtered = opportunities.filter((o) => cities.has(o.city) || zips.has(o.zip))
+    const filtered = opportunities
+      .filter((o) => cities.has(o.city) || zips.has(o.zip))
+      // A skip stays hidden for the rest of the week, so the next business
+      // can fill the slot it would have taken.
+      .filter((o) => actions[o.id] !== ACTION_SKIP)
     return rankOpportunitiesBasic(filtered).slice(0, MAX_OPPORTUNITIES)
-  }, [opportunities, profile])
+  }, [opportunities, profile, actions])
 
   const matchedEvents = useMemo(() => {
     const cities = new Set(profile.cities)
     const todayStr = getTodayStr()
     return events
       .filter((e) => cities.has(e.city) && e.date >= todayStr)
+      .filter((e) => actions[e.id] !== ACTION_SKIP)
       .sort((a, b) =>
         a.date === b.date ? a.startTime.localeCompare(b.startTime) : a.date.localeCompare(b.date)
       )
       .slice(0, MAX_EVENTS)
-  }, [events, profile])
+  }, [events, profile, actions])
 
   // Today's events are still shown in "Upcoming events" (matchedEvents,
   // above) but an advisor can't plan ahead for something happening today or
@@ -289,6 +353,11 @@ function HomePage() {
   const otherBusinessCount = remainingBusinesses.length
   const otherEventCount = remainingEvents.length
 
+  const weeklyGoal = parseWeeklyGoal(profile.newConversationsPerWeek)
+  const conversationsThisWeek = Object.values(actions).filter(
+    (choice) => choice === ACTION_CONVERSATION
+  ).length
+
   return (
     <div className="feed">
       <p className="description">
@@ -299,6 +368,13 @@ function HomePage() {
             ? "We didn't find any new businesses or upcoming events matching your coverage area yet."
             : `We found ${totalCount} new business${totalCount === 1 ? '' : 'es'} and ${totalEventCount} upcoming event${totalEventCount === 1 ? '' : 's'} that might be worth your time.`}
       </p>
+
+      {weeklyGoal !== null && (
+        <p className="progress-note">
+          You've started {conversationsThisWeek} of your {weeklyGoal} conversation
+          {weeklyGoal === 1 ? '' : 's'} this week.
+        </p>
+      )}
 
       {matched.length > 0 && (
         <label className="toggle">
@@ -329,8 +405,15 @@ function HomePage() {
             {topPicks.map(({ item, entry }, index) => (
               <li key={item.id} className="opportunity-card top-pick-card">
                 <div className="top-pick-rank">#{index + 1}</div>
+                {(entry.category || actions[item.id] === ACTION_SAVE) && (
+                  <div className="top-pick-tags">
+                    {entry.category && <span className="tag tag-category">{entry.category}</span>}
+                    {actions[item.id] === ACTION_SAVE && <span className="tag tag-saved">Saved</span>}
+                  </div>
+                )}
                 {isEvent(item) ? <EventContent e={item} /> : <BusinessContent o={item} />}
                 <AiSections entry={entry} />
+                <ActionButtons id={item.id} action={actions[item.id]} onAction={handleAction} />
               </li>
             ))}
           </ul>

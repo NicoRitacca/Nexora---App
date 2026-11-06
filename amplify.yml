@@ -13,7 +13,12 @@ frontend:
   phases:
     preBuild:
       commands:
-        - npm ci
+        # npm install instead of npm ci: Amplify's build image resolves
+        # packages itself (its Node/npm differ from the versions used to
+        # generate package-lock.json locally, which was making npm ci reject
+        # the lock file as out of sync). Revisit once the lock file is
+        # regenerated with matching versions.
+        - npm install
     build:
       commands:
         - npm run build

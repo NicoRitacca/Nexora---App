@@ -372,7 +372,7 @@ function HomePage() {
   const progressPercent = weeklyGoal > 0 ? Math.min(100, (conversationsThisWeek / weeklyGoal) * 100) : 0
 
   const summaryText = hasTopPicks
-    ? `Here are your ${topPicks.length} best opportunit${topPicks.length === 1 ? 'y' : 'ies'} this week, plus ${otherBusinessCount} more new business${otherBusinessCount === 1 ? '' : 'es'} and ${otherEventCount} upcoming event${otherEventCount === 1 ? '' : 's'}.`
+    ? `Here are your ${topPicks.length} best opportunit${topPicks.length === 1 ? 'y' : 'ies'} right now, plus ${otherBusinessCount} more new business${otherBusinessCount === 1 ? '' : 'es'} and ${otherEventCount} upcoming event${otherEventCount === 1 ? '' : 's'}.`
     : totalCount === 0 && totalEventCount === 0
       ? "We didn't find any new businesses or upcoming events matching your coverage area yet."
       : `We found ${totalCount} new business${totalCount === 1 ? '' : 'es'} and ${totalEventCount} upcoming event${totalEventCount === 1 ? '' : 's'} that might be worth your time.`
@@ -407,7 +407,7 @@ function HomePage() {
 
       {loaded && hasTopPicks && (
         <section className="top-picks-section">
-          <h2 className="section-title">Your top picks this week</h2>
+          <h2 className="section-title">Your top picks right now</h2>
           <ul className="top-pick-list">
             {topPicks.map(({ item, entry }, index) => (
               <li key={item.id} className="opportunity-card top-pick-card">

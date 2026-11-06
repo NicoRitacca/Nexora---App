@@ -1,50 +1,62 @@
 [
   {
-    "id": "L26000551769",
+    "id": "evt-coffee-connection",
     "rank": 1,
-    "category": "Potential referral partner",
-    "reason": "The name suggests a possible accounting or bookkeeping practice, which could refer small-business clients who need retirement plans, though the filing alone doesn't confirm its line of work.",
-    "warmPath": "Your CPA firm contact serving small businesses could plausibly introduce you, since that firm may already know peers in this space.",
+    "category": "Networking event",
+    "reason": "This morning networking event at a named venue on Nov 18 fits your in-person outreach style and your small-business retirement specialty.",
+    "warmPath": "Your chamber of commerce membership gives you a natural reason to attend, and you can ask chamber staff to introduce you to a few attendees.",
     "howToStart": {
-      "firstStep": "Check whether the business has a public website or online listing that describes its services.",
-      "whyThisApproach": "Since your preferred outreach includes introductions, confirming what the firm does first lets you ask your CPA contact for a warm introduction with specifics.",
-      "opener": "I'm working with small businesses on retirement plans and wanted to see whether our work might overlap with yours."
+      "firstStep": "Register for the Coffee Connection on Nov 18 at 8:30 AM and plan to arrive a few minutes early to meet the hosts.",
+      "whyThisApproach": "Your preferred outreach is in person and through introductions, and this morning event lets you do both in one visit.",
+      "opener": "Hi, I'm a financial advisor focused on retirement plans for small businesses, and I'd love to hear what local owners are working on this year."
     }
   },
   {
-    "id": "evt-coffee-connection",
+    "id": "L26000551769",
     "rank": 2,
-    "category": "Networking event",
-    "reason": "This morning networking event hosted by the Tampa Bay Chamber fits your in-person preference and your interest in small-business contacts.",
-    "warmPath": "Your chamber of commerce membership gives you a natural reason to attend, and you can ask chamber staff to introduce you to a few attendees.",
+    "category": "Potential referral partner",
+    "reason": "The name suggests an accounting or bookkeeping-type firm, which could regularly work with small businesses that need retirement plans.",
+    "warmPath": "Your CPA firm contact serving small businesses could introduce you to this firm.",
     "howToStart": {
-      "firstStep": "Register for the Nov 18 Coffee Connection at Lions World Vision Institute and arrive at 8:30 AM to meet attendees in person.",
-      "whyThisApproach": "Your in-person and introduction-based outreach style works well at a morning networking event where you can be introduced to people directly.",
-      "opener": "Hi, I'm a retirement plan specialist working with small businesses. Have you found good local resources for your team's benefits?"
+      "firstStep": "Check whether LEDGERSTONE SOLUTIONS LLC has a public website or online listing to confirm what it does before reaching out.",
+      "whyThisApproach": "Since the filing alone does not show its line of work, a quick online check fits your introduction-based approach without an uninvited visit.",
+      "opener": "I work with small-business owners on retirement plans, and I'd be glad to compare notes on the clients you both serve."
     }
   },
   {
     "id": "evt-tampa-entrepreneurship-showcase",
     "rank": 3,
     "category": "Networking event",
-    "reason": "This entrepreneur showcase at the Entrepreneur Collaborative Center puts you in front of business owners, a likely audience for small-business retirement plans.",
-    "warmPath": "none",
+    "reason": "This entrepreneur showcase on Nov 19 at 5:00 PM gathers business owners, which matches your small-business retirement focus and in-person style.",
+    "warmPath": "Your networking breakfast group could connect you with the event's organizers or with entrepreneurs planning to attend.",
     "howToStart": {
-      "firstStep": "Register for the Nov 19 Tampa Entrepreneurship Showcase & Networking Night at the Entrepreneur Collaborative Center and plan to arrive by 5:00 PM.",
-      "whyThisApproach": "An in-person showcase lets you start face-to-face conversations with entrepreneurs, matching your preferred outreach style.",
-      "opener": "What's the biggest challenge your business is working on right now, and have you thought about offering a retirement plan to your staff?"
+      "firstStep": "Sign up for the showcase on Nov 19 at 5:00 PM and ask the organizers for a list of featured businesses ahead of time.",
+      "whyThisApproach": "Your preferred outreach is in person, and a showcase lets you meet several owners who may need retirement plans in one evening.",
+      "opener": "I help small-business owners set up retirement plans, and I'm curious what your business is working toward next."
     }
   },
   {
     "id": "L26000551002",
     "rank": 4,
     "category": "Potential client",
-    "reason": "The name suggests a financial services firm, which may be a small business that could benefit from a retirement plan, though this is unconfirmed.",
-    "warmPath": "Your CPA firm serving small businesses could plausibly introduce you to this business if they serve it.",
+    "reason": "The name suggests a financial services firm, which may be a newly formed small business that could need a retirement plan.",
+    "warmPath": "Your CPA firm contact serving small businesses could plausibly introduce you to the owners.",
     "howToStart": {
-      "firstStep": "Check whether the business has a public website or online listing that shows what it does and how many people it may employ.",
-      "whyThisApproach": "Confirming its work first helps you tailor an introduction request to your CPA contact, which fits your introduction-based outreach.",
-      "opener": "I help small businesses set up retirement plans for their teams and wanted to connect about your firm's staffing needs."
+      "firstStep": "Check whether LINAN FINANCIAL LLC has a public website or online listing to learn what it does and who runs it.",
+      "whyThisApproach": "An online check respects your introduction-led approach and avoids an unannounced visit to a business whose line of work is unclear.",
+      "opener": "I specialize in retirement plans for small businesses, and I'd like to learn how your firm is set up for its clients."
+    }
+  },
+  {
+    "id": "L26000551092",
+    "rank": 5,
+    "category": "Potential client",
+    "reason": "This recently filed Tampa LLC may be a new small business, a segment that fits your small-business retirement plan specialty.",
+    "warmPath": "none",
+    "howToStart": {
+      "firstStep": "Check whether ANDREW HILL, LLC has a public website or online listing to confirm its line of work before reaching out.",
+      "whyThisApproach": "With no line of work in the filing, a quick online check fits your preference for well-prepared introductions over cold contact.",
+      "opener": "I help newer small businesses plan for retirement, and I'd be glad to share what other owners in Tampa have found useful."
     }
   }
 ]

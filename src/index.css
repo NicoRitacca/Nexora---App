@@ -368,6 +368,12 @@ body {
   color: #c4b5fd;
 }
 
+.tag-today {
+  background: rgba(252, 165, 165, 0.15);
+  border-color: rgba(252, 165, 165, 0.4);
+  color: #fca5a5;
+}
+
 .event-meta {
   font-size: 0.85rem;
   color: #94a3b8;

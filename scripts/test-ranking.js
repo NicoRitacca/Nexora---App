@@ -73,12 +73,16 @@ function matchOpportunities(opportunities, profile) {
   return rankOpportunitiesBasic(filtered).slice(0, MAX_OPPORTUNITIES);
 }
 
-// Same matching rules as the `matchedEvents` memo in src/HomePage.jsx.
+// Same matching rules as the `aiEligibleEvents` memo in src/HomePage.jsx -
+// an advisor can't plan ahead for an event happening today or already past,
+// so those are excluded here (the "Upcoming events" list in the app itself
+// still shows today's events, with a "Today"/"Tonight" tag - that's a
+// display-only concern this script doesn't need to reproduce).
 function matchEvents(events, profile) {
   const cities = new Set(profile.cities);
   const todayStr = getTodayStr();
   return events
-    .filter((e) => cities.has(e.city) && e.date >= todayStr)
+    .filter((e) => cities.has(e.city) && e.date > todayStr)
     .sort((a, b) => (a.date === b.date ? a.startTime.localeCompare(b.startTime) : a.date.localeCompare(b.date)))
     .slice(0, MAX_EVENTS);
 }

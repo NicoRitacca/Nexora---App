@@ -48,6 +48,16 @@ function getTodayStr() {
   return `${now.getFullYear()}-${month}-${day}`
 }
 
+// An advisor can't plan ahead for an event that's already started or already
+// over, so today's events show a "Today"/"Tonight" tag instead of being
+// treated as something to plan around - and are kept out of the AI
+// candidates entirely (see aiEligibleEvents below).
+function getTodayTag(e) {
+  if (e.date !== getTodayStr()) return null
+  const [hour] = e.startTime.split(':').map(Number)
+  return hour >= 17 ? 'Tonight' : 'Today'
+}
+
 // Matches the "event" vs. "business" distinction used in
 // amplify/functions/rank-opportunities/prompt.js and scripts/test-ranking.js.
 function isEvent(item) {
@@ -69,11 +79,13 @@ function BusinessContent({ o }) {
 }
 
 function EventContent({ e }) {
+  const todayTag = getTodayTag(e)
   return (
     <>
       <div className="event-name">{e.name}</div>
-      {visibleTags(e.tags).length > 0 && (
+      {(todayTag || visibleTags(e.tags).length > 0) && (
         <div className="event-tags">
+          {todayTag && <span className="tag tag-today">{todayTag}</span>}
           {visibleTags(e.tags).map((t) => (
             <span key={t.type} className={`tag tag-${t.type}`}>
               {t.label}
@@ -190,9 +202,20 @@ function HomePage() {
       .slice(0, MAX_EVENTS)
   }, [events, profile])
 
+  // Today's events are still shown in "Upcoming events" (matchedEvents,
+  // above) but an advisor can't plan ahead for something happening today or
+  // already past, so they're excluded from what the AI gets to pick from.
+  const aiEligibleEvents = useMemo(() => {
+    const todayStr = getTodayStr()
+    return matchedEvents.filter((e) => e.date > todayStr)
+  }, [matchedEvents])
+
   // Sent to the AI together, businesses first - same candidate set
   // scripts/test-ranking.js builds for the Lambda/mock.
-  const aiCandidates = useMemo(() => [...matched, ...matchedEvents], [matched, matchedEvents])
+  const aiCandidates = useMemo(
+    () => [...matched, ...aiEligibleEvents],
+    [matched, aiEligibleEvents]
+  )
 
   useEffect(() => {
     if (aiCandidates.length === 0) {

@@ -479,9 +479,16 @@ function buildConstellations(width, height) {
   // Two more real constellations, always on the left side of the page -
   // sized and placed with the exact same formulas as the rotation above,
   // just biased toward the left edge instead of anywhere across the width.
-  const leftBandHeight = height / LEFT_SIDE_TEMPLATES.length
+  // Each gets its own fixed vertical zone, with a clear gap between them,
+  // so they can never land close enough to overlap each other.
+  const LEFT_ZONES = [
+    { start: 0.06, end: 0.38 },
+    { start: 0.62, end: 0.94 },
+  ]
   const leftConstellations = LEFT_SIDE_TEMPLATES.map((template, i) => {
-    const bandTop = leftBandHeight * i
+    const zone = LEFT_ZONES[i]
+    const zoneTop = height * zone.start
+    const zoneHeight = height * (zone.end - zone.start)
     const xs = template.stars.map((s) => s.x)
     const ys = template.stars.map((s) => s.y)
     const minX = Math.min(...xs)
@@ -490,11 +497,11 @@ function buildConstellations(width, height) {
     const midX = (Math.max(...xs) + minX) / 2
     const midY = (Math.max(...ys) + minY) / 2
 
-    const targetSpan = Math.min(width * 1.1, leftBandHeight * 2.6) * (0.65 + rand() * 0.35)
+    const targetSpan = Math.min(width * 1.1, zoneHeight * 2.6) * (0.65 + rand() * 0.35)
     const scale = targetSpan / localSpan
 
     const cx = width * (0.04 + rand() * 0.14)
-    const cy = bandTop + leftBandHeight * (0.25 + rand() * 0.5)
+    const cy = zoneTop + zoneHeight * (0.25 + rand() * 0.5)
 
     const stars = template.stars.map((s) => {
       const brightness = s.bright ? 0.7 + rand() * 0.25 : 0.35 + rand() * 0.3

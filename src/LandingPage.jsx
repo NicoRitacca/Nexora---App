@@ -357,6 +357,45 @@ const CONSTELLATION_TEMPLATES = [
   },
 ]
 
+// Two more real constellations, reserved for guaranteed placement on the
+// left side of the page - kept out of CONSTELLATION_TEMPLATES above so
+// they're never part of the shuffled rotation and can't repeat one
+// already used there.
+const LEFT_SIDE_TEMPLATES = [
+  {
+    name: 'Aquila',
+    stars: [
+      { x: 0, y: 0, bright: true }, // Altair
+      { x: -14, y: -10, bright: false }, // Tarazed
+      { x: 16, y: -8, bright: false }, // Alshain
+      { x: 8, y: 22, bright: false },
+      { x: -6, y: 28, bright: false },
+    ],
+    lines: [
+      [1, 0],
+      [0, 2],
+      [0, 3],
+      [3, 4],
+    ],
+  },
+  {
+    name: 'Pisces',
+    stars: [
+      { x: 0, y: 0, bright: false },
+      { x: 14, y: 10, bright: false },
+      { x: 26, y: 24, bright: true }, // Alrescha
+      { x: 40, y: 10, bright: false },
+      { x: 54, y: 0, bright: false },
+    ],
+    lines: [
+      [0, 1],
+      [1, 2],
+      [2, 3],
+      [3, 4],
+    ],
+  },
+]
+
 function shuffled(array, rand) {
   const copy = [...array]
   for (let i = copy.length - 1; i > 0; i--) {
@@ -437,7 +476,46 @@ function buildConstellations(width, height) {
     }
   }
 
-  return { constellations, looseStars }
+  // Two more real constellations, always on the left side of the page -
+  // sized and placed with the exact same formulas as the rotation above,
+  // just biased toward the left edge instead of anywhere across the width.
+  const leftBandHeight = height / LEFT_SIDE_TEMPLATES.length
+  const leftConstellations = LEFT_SIDE_TEMPLATES.map((template, i) => {
+    const bandTop = leftBandHeight * i
+    const xs = template.stars.map((s) => s.x)
+    const ys = template.stars.map((s) => s.y)
+    const minX = Math.min(...xs)
+    const minY = Math.min(...ys)
+    const localSpan = Math.max(Math.max(...xs) - minX, Math.max(...ys) - minY, 1)
+    const midX = (Math.max(...xs) + minX) / 2
+    const midY = (Math.max(...ys) + minY) / 2
+
+    const targetSpan = Math.min(width * 1.1, leftBandHeight * 2.6) * (0.65 + rand() * 0.35)
+    const scale = targetSpan / localSpan
+
+    const cx = width * (0.04 + rand() * 0.14)
+    const cy = bandTop + leftBandHeight * (0.25 + rand() * 0.5)
+
+    const stars = template.stars.map((s) => {
+      const brightness = s.bright ? 0.7 + rand() * 0.25 : 0.35 + rand() * 0.3
+      return {
+        x: cx + (s.x - midX) * scale,
+        y: cy + (s.y - midY) * scale,
+        r: s.bright ? 2.6 + rand() * 1.4 : 1.4 + rand() * 1.2,
+        brightness,
+        bright: s.bright,
+      }
+    })
+
+    const lines = template.lines.map(([a, b]) => [stars[a], stars[b]])
+    const glow = stars
+      .filter((s) => s.bright)
+      .map((s) => ({ node: s, color: GLOW_COLORS[Math.floor(rand() * GLOW_COLORS.length)] }))
+
+    return { stars, lines, glow }
+  })
+
+  return { constellations: [...constellations, ...leftConstellations], looseStars }
 }
 
 function ConnectionField({ width, height }) {

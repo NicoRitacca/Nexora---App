@@ -1,10 +1,14 @@
 version: 1
-backend:
-  phases:
-    build:
-      commands:
-        - npm ci
-        - npx ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
+# Backend build disabled until the AWS auth/permissions issue blocking
+# `ampx pipeline-deploy` is fixed - restore this block to deploy the
+# backend again. Until then Amplify builds the front end only, and the
+# site falls back to the bundled sample AI ranking (src/aiRanking.js).
+# backend:
+#   phases:
+#     build:
+#       commands:
+#         - npm ci
+#         - npx ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
 frontend:
   phases:
     preBuild:

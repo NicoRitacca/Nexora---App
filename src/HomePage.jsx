@@ -78,6 +78,18 @@ function isEvent(item) {
   return item.hostingOrg !== undefined
 }
 
+// One distinct tag color per category value from CATEGORIES in
+// amplify/functions/rank-opportunities/prompt.js.
+const CATEGORY_TAG_CLASSES = {
+  'Potential client': 'tag-category-client',
+  'Potential referral partner': 'tag-category-referral',
+  'Networking event': 'tag-category-event',
+}
+
+function categoryTagClass(category) {
+  return CATEGORY_TAG_CLASSES[category] || 'tag-category'
+}
+
 function BusinessSourceLine({ o }) {
   return <div className="source-line">Source: Florida Sunbiz filing, filed {formatDate(o.date)}</div>
 }
@@ -357,34 +369,29 @@ function HomePage() {
   const conversationsThisWeek = Object.values(actions).filter(
     (choice) => choice === ACTION_CONVERSATION
   ).length
+  const progressPercent = weeklyGoal > 0 ? Math.min(100, (conversationsThisWeek / weeklyGoal) * 100) : 0
+
+  const summaryText = hasTopPicks
+    ? `Here are your ${topPicks.length} best opportunit${topPicks.length === 1 ? 'y' : 'ies'} this week, plus ${otherBusinessCount} more new business${otherBusinessCount === 1 ? '' : 'es'} and ${otherEventCount} upcoming event${otherEventCount === 1 ? '' : 's'}.`
+    : totalCount === 0 && totalEventCount === 0
+      ? "We didn't find any new businesses or upcoming events matching your coverage area yet."
+      : `We found ${totalCount} new business${totalCount === 1 ? '' : 'es'} and ${totalEventCount} upcoming event${totalEventCount === 1 ? '' : 's'} that might be worth your time.`
 
   return (
     <div className="feed">
-      <p className="description">
-        {greeting}{' '}
-        {hasTopPicks
-          ? `Here are your ${topPicks.length} best opportunit${topPicks.length === 1 ? 'y' : 'ies'} this week, plus ${otherBusinessCount} more new business${otherBusinessCount === 1 ? '' : 'es'} and ${otherEventCount} upcoming event${otherEventCount === 1 ? '' : 's'}.`
-          : totalCount === 0 && totalEventCount === 0
-            ? "We didn't find any new businesses or upcoming events matching your coverage area yet."
-            : `We found ${totalCount} new business${totalCount === 1 ? '' : 'es'} and ${totalEventCount} upcoming event${totalEventCount === 1 ? '' : 's'} that might be worth your time.`}
-      </p>
+      <h1 className="feed-greeting">{greeting}</h1>
+      <p className="description">{summaryText}</p>
 
       {weeklyGoal !== null && (
-        <p className="progress-note">
-          You've started {conversationsThisWeek} of your {weeklyGoal} conversation
-          {weeklyGoal === 1 ? '' : 's'} this week.
-        </p>
-      )}
-
-      {matched.length > 0 && (
-        <label className="toggle">
-          <input
-            type="checkbox"
-            checked={hideBorderArea}
-            onChange={(e) => setHideBorderArea(e.target.checked)}
-          />
-          Hide border-area opportunities
-        </label>
+        <div className="progress">
+          <div className="progress-bar">
+            <div className="progress-bar-fill" style={{ width: `${progressPercent}%` }} />
+          </div>
+          <p className="progress-note">
+            You've started {conversationsThisWeek} of your {weeklyGoal} conversation
+            {weeklyGoal === 1 ? '' : 's'} this week.
+          </p>
+        </div>
       )}
 
       {isMockAi && <p className="mock-ai-label">Preview: sample AI suggestions</p>}
@@ -407,7 +414,9 @@ function HomePage() {
                 <div className="top-pick-rank">#{index + 1}</div>
                 {(entry.category || actions[item.id] === ACTION_SAVE) && (
                   <div className="top-pick-tags">
-                    {entry.category && <span className="tag tag-category">{entry.category}</span>}
+                    {entry.category && (
+                      <span className={`tag ${categoryTagClass(entry.category)}`}>{entry.category}</span>
+                    )}
                     {actions[item.id] === ACTION_SAVE && <span className="tag tag-saved">Saved</span>}
                   </div>
                 )}
@@ -420,9 +429,17 @@ function HomePage() {
         </section>
       )}
 
-      {loaded && visibleBusinesses.length > 0 && (
+      {loaded && remainingBusinesses.length > 0 && (
         <section className="more-businesses-section">
           {hasTopPicks && <h2 className="section-title">More new businesses</h2>}
+          <label className="toggle">
+            <input
+              type="checkbox"
+              checked={hideBorderArea}
+              onChange={(e) => setHideBorderArea(e.target.checked)}
+            />
+            Hide border-area opportunities
+          </label>
           <ul className="opportunity-list">
             {visibleBusinesses.map((o) => (
               <li key={o.id} className="opportunity-card">

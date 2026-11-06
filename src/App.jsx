@@ -1,10 +1,27 @@
 import { useState } from 'react'
+import LandingPage from './LandingPage.jsx'
 import ProfilePage from './ProfilePage.jsx'
 import HomePage from './HomePage.jsx'
 import { hasSavedProfile } from './storage.js'
 
+function LogoMark() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="5" cy="12" r="2.2" />
+      <circle cx="19" cy="6" r="2.2" />
+      <circle cx="19" cy="18" r="2.2" />
+      <line x1="7" y1="11" x2="17" y2="7" />
+      <line x1="7" y1="13" x2="17" y2="17" />
+    </svg>
+  )
+}
+
 function App() {
-  const [view, setView] = useState(() => (hasSavedProfile() ? 'home' : 'setup'))
+  const [view, setView] = useState(() => (hasSavedProfile() ? 'home' : 'landing'))
+
+  function handleGetStarted() {
+    setView(hasSavedProfile() ? 'home' : 'setup')
+  }
 
   function handleProfileSaved() {
     setView('home')
@@ -13,9 +30,20 @@ function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <h1 className="title">Nexora</h1>
-        <p className="description">Your companion for new opportunities.</p>
+        <button type="button" className="logo" onClick={() => setView('landing')}>
+          <span className="logo-mark">
+            <LogoMark />
+          </span>
+          <span className="logo-text">Nexora</span>
+        </button>
 
+        {view === 'landing' && (
+          <nav className="nav">
+            <button type="button" className="nav-button nav-button-primary" onClick={handleGetStarted}>
+              Get Started
+            </button>
+          </nav>
+        )}
         {view === 'home' && (
           <nav className="nav">
             <button type="button" className="nav-button" onClick={() => setView('profile')}>
@@ -33,6 +61,7 @@ function App() {
       </header>
 
       <main>
+        {view === 'landing' && <LandingPage onGetStarted={handleGetStarted} />}
         {view === 'setup' && (
           <div className="welcome">
             <p className="description">

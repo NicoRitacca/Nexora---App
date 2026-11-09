@@ -17,6 +17,9 @@ function mulberry32(seed) {
 const CONSTELLATION_SEED = 1105260
 const BAND_SPACING = 480 // target vertical px per constellation - tight enough that one is always in view
 const GLOW_COLORS = ['blue', 'purple']
+// Every dot (bright or dim, constellation or loose background star) renders
+// at this same radius - only brightness (opacity) tells them apart.
+const DOT_RADIUS = 2.4
 
 // Eighteen well-known constellations, simplified to their classic asterism
 // (the lines people actually picture) in a small local coordinate space.
@@ -446,7 +449,7 @@ function buildConstellations(width, height) {
       return {
         x: cx + (s.x - midX) * scale,
         y: cy + (s.y - midY) * scale,
-        r: s.bright ? 2.6 + rand() * 1.4 : 1.4 + rand() * 1.2,
+        r: DOT_RADIUS,
         brightness,
         bright: s.bright,
       }
@@ -470,7 +473,7 @@ function buildConstellations(width, height) {
       looseStars.push({
         x: width * rand(),
         y: bandTop + bandHeight * rand(),
-        r: 1 + brightness * 1.8,
+        r: DOT_RADIUS,
         brightness,
       })
     }
@@ -501,7 +504,7 @@ function buildConstellations(width, height) {
       return {
         x: cx + (s.x - midX) * scale,
         y: cy + (s.y - midY) * scale,
-        r: s.bright ? 2.6 + rand() * 1.4 : 1.4 + rand() * 1.2,
+        r: DOT_RADIUS,
         brightness,
         bright: s.bright,
       }
@@ -533,7 +536,7 @@ export function ConnectionField({ width, height }) {
       </g>
       {constellations.map((constellation, ci) => (
         <g key={ci}>
-          <g className="connection-lines" stroke="currentColor" strokeWidth="1">
+          <g className="connection-lines" stroke="currentColor" strokeWidth="1.8">
             {constellation.lines.map(([a, b], li) => (
               <line key={li} x1={a.x} y1={a.y} x2={b.x} y2={b.y} />
             ))}

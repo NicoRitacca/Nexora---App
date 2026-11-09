@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import {
   loadProfile,
   loadActionsThisWeek,
@@ -11,10 +11,15 @@ import { fetchOpportunities } from './opportunities.js'
 import { fetchEvents } from './events.js'
 import { rankOpportunitiesBasic } from './rankingFallback.js'
 import { getAiRanking, isMockAi } from './aiRanking.js'
+import { ConnectionField, useBackdropSize } from './ConstellationBackground.jsx'
 
 const MAX_OPPORTUNITIES = 10
 const MAX_EVENTS = 10
 const MAX_TOP_PICKS = 5
+const COLLAPSED_GRID_COUNT = 6
+// Matches the gap above .feed (the app header's margin-bottom) so the
+// backdrop bleeds all the way up behind the header tile with no seam.
+const BACKDROP_TOP_EXTENSION = 28
 
 function getGreeting() {
   const hour = new Date().getHours()
@@ -141,7 +146,7 @@ function EventContent({ e }) {
         </div>
       )}
       <div className="event-meta">
-        {e.eventType} · {formatDate(e.date)}, {formatTime(e.startTime)}
+        {formatDate(e.date)}, {formatTime(e.startTime)}
         {e.endTime ? `–${formatTime(e.endTime)}` : ''}
       </div>
       <div className="event-meta">
@@ -236,6 +241,11 @@ function HomePage() {
   const [aiUnavailable, setAiUnavailable] = useState(false)
   const [aiLoading, setAiLoading] = useState(false)
   const [actions, setActions] = useState(() => loadActionsThisWeek())
+  const [showAllBusinesses, setShowAllBusinesses] = useState(false)
+  const [showAllEvents, setShowAllEvents] = useState(false)
+
+  const feedRef = useRef(null)
+  const { width: backdropWidth, height: backdropHeight } = useBackdropSize(feedRef)
 
   const profile = useMemo(() => loadProfile(), [])
 
@@ -358,6 +368,14 @@ function HomePage() {
     ? remainingBusinesses.filter((o) => o.zipCoverage !== 'partial')
     : remainingBusinesses
 
+  const businessesToShow = showAllBusinesses
+    ? visibleBusinesses
+    : visibleBusinesses.slice(0, COLLAPSED_GRID_COUNT)
+
+  const eventsToShow = showAllEvents
+    ? remainingEvents
+    : remainingEvents.slice(0, COLLAPSED_GRID_COUNT)
+
   const greeting = getGreeting()
   const hasTopPicks = topPicks.length > 0
   const totalCount = matched.length
@@ -378,90 +396,117 @@ function HomePage() {
       : `We found ${totalCount} new business${totalCount === 1 ? '' : 'es'} and ${totalEventCount} upcoming event${totalEventCount === 1 ? '' : 's'} that might be worth your time.`
 
   return (
-    <div className="feed">
-      <h1 className="feed-greeting">{greeting}</h1>
-      <p className="description">{summaryText}</p>
+    <div className="feed" ref={feedRef}>
+      <div className="feed-backdrop">
+        {backdropWidth > 0 && backdropHeight > 0 && (
+          <ConnectionField
+            width={backdropWidth}
+            height={backdropHeight + BACKDROP_TOP_EXTENSION}
+          />
+        )}
+      </div>
 
-      {weeklyGoal !== null && (
-        <div className="progress">
-          <div className="progress-bar">
-            <div className="progress-bar-fill" style={{ width: `${progressPercent}%` }} />
-          </div>
-          <p className="progress-note">
-            You've started {conversationsThisWeek} of your {weeklyGoal} conversation
-            {weeklyGoal === 1 ? '' : 's'} this week.
+      <div className="feed-content">
+        <section className="feed-header-tile">
+          <h1 className="feed-greeting">{greeting}</h1>
+          <p className="description">{summaryText}</p>
+
+          {weeklyGoal !== null && (
+            <div className="progress">
+              <div className="progress-bar">
+                <div className="progress-bar-fill" style={{ width: `${progressPercent}%` }} />
+              </div>
+              <p className="progress-note">
+                You've started {conversationsThisWeek} of your {weeklyGoal} conversation
+                {weeklyGoal === 1 ? '' : 's'} this week.
+              </p>
+            </div>
+          )}
+        </section>
+
+        {isMockAi && <p className="mock-ai-label">Preview: sample AI suggestions</p>}
+
+        {aiLoading && <p className="ai-note">Finding your best opportunities for this week…</p>}
+
+        {aiUnavailable && (
+          <p className="ai-note">
+            AI suggestions are unavailable right now — showing opportunities by newest filing in
+            your coverage area.
           </p>
-        </div>
-      )}
+        )}
 
-      {isMockAi && <p className="mock-ai-label">Preview: sample AI suggestions</p>}
+        {loaded && hasTopPicks && (
+          <section className="top-picks-section">
+            <h2 className="section-title">Your top picks right now</h2>
+            <ul className="top-pick-list">
+              {topPicks.map(({ item, entry }, index) => (
+                <li key={item.id} className="opportunity-card top-pick-card">
+                  <div className="top-pick-rank">#{index + 1}</div>
+                  {(entry.category || actions[item.id] === ACTION_SAVE) && (
+                    <div className="top-pick-tags">
+                      {entry.category && (
+                        <span className={`tag ${categoryTagClass(entry.category)}`}>{entry.category}</span>
+                      )}
+                      {actions[item.id] === ACTION_SAVE && <span className="tag tag-saved">Saved</span>}
+                    </div>
+                  )}
+                  {isEvent(item) ? <EventContent e={item} /> : <BusinessContent o={item} />}
+                  <AiSections entry={entry} />
+                  <ActionButtons id={item.id} action={actions[item.id]} onAction={handleAction} />
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
-      {aiLoading && <p className="ai-note">Finding your best opportunities for this week…</p>}
+        {loaded && remainingBusinesses.length > 0 && (
+          <section className="more-businesses-section">
+            <h2 className="section-title">More new businesses ({otherBusinessCount})</h2>
+            <label className="toggle">
+              <input
+                type="checkbox"
+                checked={hideBorderArea}
+                onChange={(e) => setHideBorderArea(e.target.checked)}
+              />
+              Hide border-area opportunities
+            </label>
+            <ul className="opportunity-grid">
+              {businessesToShow.map((o) => (
+                <li key={o.id} className="opportunity-card">
+                  <BusinessContent o={o} />
+                </li>
+              ))}
+            </ul>
+            {!showAllBusinesses && visibleBusinesses.length > COLLAPSED_GRID_COUNT && (
+              <button
+                type="button"
+                className="show-more-button"
+                onClick={() => setShowAllBusinesses(true)}
+              >
+                Show more
+              </button>
+            )}
+          </section>
+        )}
 
-      {aiUnavailable && (
-        <p className="ai-note">
-          AI suggestions are unavailable right now — showing opportunities by newest filing in
-          your coverage area.
-        </p>
-      )}
-
-      {loaded && hasTopPicks && (
-        <section className="top-picks-section">
-          <h2 className="section-title">Your top picks right now</h2>
-          <ul className="top-pick-list">
-            {topPicks.map(({ item, entry }, index) => (
-              <li key={item.id} className="opportunity-card top-pick-card">
-                <div className="top-pick-rank">#{index + 1}</div>
-                {(entry.category || actions[item.id] === ACTION_SAVE) && (
-                  <div className="top-pick-tags">
-                    {entry.category && (
-                      <span className={`tag ${categoryTagClass(entry.category)}`}>{entry.category}</span>
-                    )}
-                    {actions[item.id] === ACTION_SAVE && <span className="tag tag-saved">Saved</span>}
-                  </div>
-                )}
-                {isEvent(item) ? <EventContent e={item} /> : <BusinessContent o={item} />}
-                <AiSections entry={entry} />
-                <ActionButtons id={item.id} action={actions[item.id]} onAction={handleAction} />
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
-
-      {loaded && remainingBusinesses.length > 0 && (
-        <section className="more-businesses-section">
-          {hasTopPicks && <h2 className="section-title">More new businesses</h2>}
-          <label className="toggle">
-            <input
-              type="checkbox"
-              checked={hideBorderArea}
-              onChange={(e) => setHideBorderArea(e.target.checked)}
-            />
-            Hide border-area opportunities
-          </label>
-          <ul className="opportunity-list">
-            {visibleBusinesses.map((o) => (
-              <li key={o.id} className="opportunity-card">
-                <BusinessContent o={o} />
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
-
-      {loaded && remainingEvents.length > 0 && (
-        <section className="events-section">
-          <h2 className="section-title">Upcoming events</h2>
-          <ul className="event-list">
-            {remainingEvents.map((e) => (
-              <li key={e.id} className="event-card">
-                <EventContent e={e} />
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
+        {loaded && remainingEvents.length > 0 && (
+          <section className="events-section">
+            <h2 className="section-title">Upcoming events ({otherEventCount})</h2>
+            <ul className="event-grid">
+              {eventsToShow.map((e) => (
+                <li key={e.id} className="event-card">
+                  <EventContent e={e} />
+                </li>
+              ))}
+            </ul>
+            {!showAllEvents && remainingEvents.length > COLLAPSED_GRID_COUNT && (
+              <button type="button" className="show-more-button" onClick={() => setShowAllEvents(true)}>
+                Show more
+              </button>
+            )}
+          </section>
+        )}
+      </div>
     </div>
   )
 }

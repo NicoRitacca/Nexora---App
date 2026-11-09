@@ -679,9 +679,54 @@ body {
 /* Feed */
 
 .feed {
-  max-width: 46rem;
+  position: relative;
+  max-width: 64rem;
   margin: 0 auto;
   text-align: left;
+}
+
+/* Same full-bleed backdrop technique as .landing-backdrop, but fainter so
+   the cards on this page stay easy to read. Shifted up by the gap above
+   .feed (the app header's margin-bottom) and given matching extra height
+   (via the taller ConnectionField passed in HomePage.jsx) so the
+   starfield bleeds all the way up behind the header tile with no seam,
+   while still reaching exactly as far down as before. */
+.feed-backdrop {
+  position: absolute;
+  top: -28px;
+  left: 50%;
+  width: 100vw;
+  margin-left: -50vw;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 45% 28% at 20% 10%, rgba(124, 58, 237, 0.07), transparent 70%),
+    radial-gradient(ellipse 45% 28% at 80% 50%, rgba(124, 58, 237, 0.05), transparent 70%);
+}
+
+.feed-backdrop .connection-field {
+  opacity: 0.32;
+}
+
+.feed-content {
+  position: relative;
+  z-index: 1;
+}
+
+.feed-header-tile {
+  background: var(--color-surface);
+  border-radius: 1.5rem;
+  box-shadow: 0 24px 56px -28px rgba(34, 28, 53, 0.22);
+  padding: 2rem clamp(1.5rem, 4vw, 2.5rem);
+  margin-bottom: 2rem;
+}
+
+.feed-header-tile .description {
+  margin-bottom: 1.5rem;
+}
+
+.feed-header-tile .progress {
+  margin: 0;
 }
 
 .feed-greeting {
@@ -701,13 +746,27 @@ body {
   margin: 0 0 1rem;
 }
 
-.opportunity-list {
+.opportunity-grid {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+@media (max-width: 900px) {
+  .opportunity-grid,
+  .event-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .opportunity-grid,
+  .event-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .opportunity-card {
@@ -821,14 +880,20 @@ body {
 
 .top-pick-card {
   border-color: var(--color-primary-light);
-  box-shadow: 0 4px 16px -8px rgba(91, 33, 182, 0.25);
+  box-shadow: 0 12px 28px -14px rgba(91, 33, 182, 0.3);
+  padding: 1.5rem 1.75rem;
+}
+
+.top-pick-card .opportunity-name,
+.top-pick-card .event-name {
+  font-size: 1.25rem;
 }
 
 .top-pick-rank {
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   font-weight: 700;
   color: var(--color-primary);
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.4rem;
 }
 
 .more-businesses-section .section-title {
@@ -846,13 +911,31 @@ body {
   color: var(--color-text);
 }
 
-.event-list {
+.show-more-button {
+  display: inline-block;
+  margin-top: 1rem;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-primary);
+  padding: 0.5rem 1.25rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.show-more-button:hover {
+  border-color: var(--color-primary-light);
+}
+
+.event-grid {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
 }
 
 .event-card {

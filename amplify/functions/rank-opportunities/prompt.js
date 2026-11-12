@@ -8,6 +8,14 @@
 // field (the current browser payload only ever sends business filings) are
 // treated as "business" for backward compatibility.
 
+// Bump this whenever buildSystemPrompt(), buildUserPrompt(), or
+// parseRanking()'s output shape changes meaningfully enough that a
+// previously cached ranking could look stale or wrong (wording, a new
+// field, phrasing rules, etc.). src/aiRanking.js folds this into its
+// localStorage cache key so an old cached result can never outlive the
+// prompt that produced it.
+export const PROMPT_VERSION = 2
+
 export const MODEL_ID = 'claude-haiku-5-5'
 
 // Haiku 5.5 defaults to "medium" effort, which thinks readily. Per Anthropic's
@@ -38,6 +46,16 @@ export const MAX_RESULTS = 5
 // in parseRanking() below.
 export const CATEGORIES = ['Potential client', 'Potential referral partner', 'Networking event']
 
+// Mirrors getTodayStr() in src/HomePage.jsx and scripts/test-ranking.js -
+// given to Claude in the user prompt so it has a fixed reference point to
+// compute filing recency or event proximity from, instead of guessing.
+function todayStr() {
+  const now = new Date()
+  const month = String(now.getMonth() + 1).padStart(2, '0')
+  const day = String(now.getDate()).padStart(2, '0')
+  return `${now.getFullYear()}-${month}-${day}`
+}
+
 function itemType(item) {
   if (item.type === 'business' || item.type === 'event') return item.type
   return item.hostingOrg !== undefined ? 'event' : 'business'
@@ -59,12 +77,14 @@ export function buildSystemPrompt() {
     'A business name may be mentioned with hedging, like "the name suggests a financial services firm" - never state an industry as fact just because the name implies one.',
     'Never treat a business name as a person, and never address or refer to anyone by a personal name - no personal names are present in the data, and none should appear in your response.',
     'Whenever a date or time appears in your response text, write it in a friendly, human format, like "Nov 18" and "8:30 AM" - never output a raw ISO date like "2026-11-18" or 24-hour time like "08:30".',
+    'You are given "Today\'s date" in the user message so you have a fixed reference point, but never state today\'s date itself, a day count, or any relative-time phrase anywhere in your response - the app computes and displays its own countdown tag separately. Write "on Nov 18" - never "six days away," "7 days away," "tomorrow," "next Tuesday," or "next week." Always refer to a date using the friendly exact-date format above instead.',
     `From everything given, select at most ${MAX_RESULTS} of the strongest matches for this advisor - considering both businesses and events together. If fewer than ${MAX_RESULTS} items have enough signal to justify inclusion, return fewer. Never pad the list with weak matches just to reach ${MAX_RESULTS}.`,
-    'Respond with strict JSON only, no prose: an array of the selected items, each shaped as {"id": string, "rank": number, "category": string, "reason": string, "warmPath": string, "howToStart": {"firstStep": string, "whyThisApproach": string, "opener": string}}.',
+    'Respond with strict JSON only, no prose: an array of the selected items, each shaped as {"id": string, "rank": number, "category": string, "reason": string, "whyNow": string, "warmPath": string, "howToStart": {"firstStep": string, "whyThisApproach": string, "opener": string}}.',
     'Rank 1 is the most promising item for this advisor.',
     `category: exactly one of "${CATEGORIES.join('", "')}", chosen only from the facts given. Every event is "Networking event". A business is "Potential client" by default; call it "Potential referral partner" only when its stated entity type or name hints (still hedged, never stated as fact) suggest a profession that refers clients to advisors, such as a CPA, accounting, or legal practice.`,
     'reason: one short sentence, grounded only in the given facts, explaining why this item fits the advisor.',
-    'warmPath: one short sentence naming the specific part of the advisor\'s network that could plausibly provide an introduction or connection here, grounded only in the network description given; if nothing in the network plausibly connects, use exactly "none".',
+    'whyNow: one short sentence explaining why the timing of this pick matters right now, grounded only in the item\'s own date (and, for an event, its time). Always name the exact date itself - write "on Nov 18," never "six days away," "7 days away," "tomorrow," "next Tuesday," "next week," or "the next evening" (the app shows its own countdown tag for that separately, so repeating or approximating it here is redundant and risks being wrong). Never use the word "next" before a day, time span, or part of the day - it always smuggles in a relative count. For a business, reference its filing date, like "Registered Nov 1, so the owners are likely still making their first decisions about benefits and insurance." For an event, reference its date, like "This event is on Nov 18." Never invent a deadline, season, or urgency the given dates don\'t support.',
+    'warmPath: never claim a network contact already knows this specific business or its people - that fact isn\'t in the data. Instead, phrase warmPath as something the advisor could ask a specific part of their network, grounded only in the network description given, like "Ask your CPA firm contact whether they know the owners of this business." If nothing in the network plausibly has a reason to know, use exactly "none".',
     'Watch for circular warm paths: if a network entry could plausibly be the same organization as the item\'s hosting org (for example, the network says "a local chamber of commerce" and the event\'s hosting org is "Tampa Bay Chamber"), that organization cannot be the connector that introduces the advisor to itself. In that case, phrase warmPath around the advisor\'s own standing with that organization instead - something like "your chamber membership gives you a natural reason to attend, and you can ask chamber staff to introduce you to a few attendees."',
     'howToStart.firstStep: a concrete suggested first step, grounded in the advisor\'s preferred outreach styles and the item\'s own facts.',
     'A business filing is not evidence of a public storefront or an address safe to visit uninvited - its entityType field is only its legal structure, not its line of work or whether it welcomes visitors. Never suggest visiting a business in person as the first step; that is appropriate only for an item the data shows is a public venue open to attendees, such as an event with its own venue and date. For a business, when nothing in the data clarifies its line of work, the first step should be to check whether it has a public website or online listing, not to visit in person.',
@@ -107,6 +127,8 @@ export function buildUserPrompt(items, profile) {
   const itemLines = items.map((item) => (itemType(item) === 'event' ? describeEvent(item) : describeBusiness(item)))
 
   return [
+    `Today's date: ${todayStr()}`,
+    '',
     'Advisor profile:',
     profileLines.length ? profileLines.join('\n') : '(no profile details provided)',
     '',
@@ -134,6 +156,7 @@ export function parseRanking(text, items) {
           // don't trust it to always comply.
           category: VALID_CATEGORIES.has(entry.category) ? entry.category : null,
           reason: String(entry.reason || '').slice(0, 300),
+          whyNow: String(entry.whyNow || '').slice(0, 300),
           warmPath: String(entry.warmPath || 'none').slice(0, 300),
           howToStart: {
             firstStep: String(howToStart.firstStep || '').slice(0, 300),

@@ -12,6 +12,7 @@ const schema = a.schema({
     id: a.string().required(),
     rank: a.integer().required(),
     reason: a.string().required(),
+    whyNow: a.string().required(),
     warmPath: a.string().required(),
     howToStart: a.ref('HowToStart').required(),
   }),

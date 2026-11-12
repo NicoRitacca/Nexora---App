@@ -102,6 +102,7 @@ function printResult(item, ranked) {
   }
   console.log(`   Category:        ${ranked.category ?? "(none)"}`);
   console.log(`   Why it fits:     ${ranked.reason}`);
+  console.log(`   Why now:         ${ranked.whyNow}`);
   console.log(`   Warm path:       ${ranked.warmPath}`);
   console.log(`   First step:      ${ranked.howToStart.firstStep}`);
   console.log(`   Why this way:    ${ranked.howToStart.whyThisApproach}`);

@@ -90,3 +90,21 @@ export function loadActionsThisWeek() {
   })
   return result
 }
+
+const INSTALL_BANNER_DISMISSED_KEY = 'nexora.installBannerDismissed'
+
+export function isInstallBannerDismissed() {
+  try {
+    return localStorage.getItem(INSTALL_BANNER_DISMISSED_KEY) === 'true'
+  } catch {
+    return false
+  }
+}
+
+export function dismissInstallBanner() {
+  try {
+    localStorage.setItem(INSTALL_BANNER_DISMISSED_KEY, 'true')
+  } catch {
+    // ignore storage errors (e.g. private browsing, quota)
+  }
+}

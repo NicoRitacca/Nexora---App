@@ -1,8 +1,11 @@
 import { generateClient } from 'aws-amplify/data'
 import { amplifyOutputs } from './amplifyOutputs.js'
+import { PROMPT_VERSION } from '../amplify/functions/rank-opportunities/prompt.js'
 
 const AI_TIMEOUT_MS = 20000
-const CACHE_KEY = 'nexora.aiRankingCache'
+// Versioned so a real-backend result cached under an older prompt can never
+// be read back as if it came from the current one - see PROMPT_VERSION.
+const CACHE_KEY = `nexora.aiRankingCache.v${PROMPT_VERSION}`
 const MOCK_RANKING_URL = '/mock-ai-ranking.json'
 
 // No deployed backend to configure Amplify with, or the mock is explicitly
@@ -16,14 +19,16 @@ function getClient() {
   return client
 }
 
-let mockRankingPromise = null
+// Always fetches fresh, deliberately uncached and unmemoized - mock mode
+// must never show a saved copy. 'no-store' bypasses the HTTP cache so a
+// rerun of scripts/test-ranking.js (which overwrites this same file) is
+// reflected immediately, and fetching again on every call (instead of
+// memoizing the promise) means an in-page session can't keep showing a
+// mock response it loaded before the file last changed.
 function loadMockRanking() {
-  if (!mockRankingPromise) {
-    mockRankingPromise = fetch(MOCK_RANKING_URL)
-      .then((res) => (res.ok ? res.json() : []))
-      .catch(() => [])
-  }
-  return mockRankingPromise
+  return fetch(MOCK_RANKING_URL, { cache: 'no-store' })
+    .then((res) => (res.ok ? res.json() : []))
+    .catch(() => [])
 }
 
 // Matches the "event" vs. "business" distinction used in

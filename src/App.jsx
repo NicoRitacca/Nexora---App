@@ -2,6 +2,7 @@ import { useState } from 'react'
 import LandingPage from './LandingPage.jsx'
 import ProfilePage from './ProfilePage.jsx'
 import HomePage from './HomePage.jsx'
+import InstallBanner from './InstallBanner.jsx'
 import { hasSavedProfile } from './storage.js'
 
 function LogoMark() {
@@ -74,6 +75,8 @@ function App() {
         {view === 'profile' && <ProfilePage onSaved={handleProfileSaved} />}
         {view === 'home' && <HomePage />}
       </main>
+
+      <InstallBanner />
     </div>
   )
 }

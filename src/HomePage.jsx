@@ -77,6 +77,36 @@ function getTodayTag(e) {
   return hour >= 17 ? 'Tonight' : 'Today'
 }
 
+function daysFromToday(dateStr) {
+  const [ty, tm, td] = getTodayStr().split('-').map(Number)
+  const [y, m, d] = dateStr.split('-').map(Number)
+  const today = new Date(ty, tm - 1, td)
+  const target = new Date(y, m - 1, d)
+  return Math.round((target - today) / 86400000)
+}
+
+// Top-pick cards show their own countdown tag ("Today," "Tomorrow," "In 6
+// days") computed here from the event's own date each time the page loads,
+// rather than trusting the AI to say how soon an event is in its "why now"
+// text - that drifts stale the moment the real "today" moves on, and the
+// model has been known to hallucinate the count. See whyNow's instructions
+// in amplify/functions/rank-opportunities/prompt.js, which now forbid it
+// from stating relative timing at all.
+//
+// `urgent` flags "Today"/"Tonight"/"Tomorrow" for the attention-amber tag
+// style - anything further out (2+ days away) gets the calm neutral style
+// instead, so the feed isn't flagging every upcoming event as pressing.
+function getCountdownTag(e) {
+  const diff = daysFromToday(e.date)
+  if (diff < 0) return null
+  if (diff === 0) {
+    const [hour] = e.startTime.split(':').map(Number)
+    return { label: hour >= 17 ? 'Tonight' : 'Today', urgent: true }
+  }
+  if (diff === 1) return { label: 'Tomorrow', urgent: true }
+  return { label: `In ${diff} days`, urgent: false }
+}
+
 // Matches the "event" vs. "business" distinction used in
 // amplify/functions/rank-opportunities/prompt.js and scripts/test-ranking.js.
 function isEvent(item) {
@@ -164,71 +194,151 @@ const ACTION_LABELS = {
   [ACTION_SKIP]: 'Skip',
 }
 
-function ActionButtons({ id, action, onAction }) {
-  return (
-    <div className="action-buttons">
-      {[ACTION_CONVERSATION, ACTION_SAVE, ACTION_SKIP].map((choice) => (
-        <button
-          key={choice}
-          type="button"
-          className={`action-button${action === choice ? ' action-button-active' : ''}`}
-          onClick={() => onAction(id, choice)}
-        >
-          {ACTION_LABELS[choice]}
-        </button>
-      ))}
-    </div>
-  )
+// Combines what used to be two separate meta lines (date/time, then
+// venue/city for an event; type/city/date for a business) into the single
+// compact line top-pick cards show - same facts, same formatting helpers,
+// just joined instead of stacked.
+function topPickMetaLine(item, eventItem) {
+  if (eventItem) {
+    const timeRange = `${formatTime(item.startTime)}${item.endTime ? `–${formatTime(item.endTime)}` : ''}`
+    return [`${formatDate(item.date)}, ${timeRange}`, item.venue, item.city].filter(Boolean).join(' · ')
+  }
+  return [item.entityType, item.city, formatDate(item.date)].filter(Boolean).join(' · ')
 }
 
-function AiSections({ entry }) {
-  const [expanded, setExpanded] = useState(false)
-  if (!entry) return null
+// The left-edge stripe reuses the exact color each category's tag already
+// uses (see --color-category-* in index.css) by deriving its class name
+// from categoryTagClass() instead of a separate color map.
+function categoryAccentClass(category) {
+  return categoryTagClass(category).replace('tag-category', 'top-pick-accent')
+}
 
+function TopPickCard({ item, entry, index, action, onAction }) {
+  const [expanded, setExpanded] = useState(false)
+  const eventItem = isEvent(item)
+  const countdownTag = eventItem ? getCountdownTag(item) : null
+  const metaTags = eventItem ? visibleTags(item.tags) : []
   const hasWarmPath = entry.warmPath && entry.warmPath !== 'none'
   const hasDetails = hasWarmPath || entry.howToStart
+  const hasTopTags = entry.category || countdownTag || action === ACTION_SAVE
+  // Same action and the same weekly-progress count either way - "Plan to
+  // attend" just reads more naturally than "Start a conversation" for an
+  // event you'd attend rather than call or email.
+  const conversationLabel = eventItem ? 'Plan to attend' : ACTION_LABELS[ACTION_CONVERSATION]
 
   return (
-    <>
-      {entry.reason && (
-        <div className="ai-section">
-          <div className="ai-section-title">Why it fits</div>
-          <div className="ai-section-body">{entry.reason}</div>
+    <li className={`opportunity-card top-pick-card ${categoryAccentClass(entry.category)}`}>
+      <div className="top-pick-topline">
+        <span className="top-pick-rank">#{index + 1}</span>
+        {hasTopTags && (
+          <span className="top-pick-tags">
+            {entry.category && (
+              <span className={`tag ${categoryTagClass(entry.category)}`}>{entry.category}</span>
+            )}
+            {countdownTag && (
+              <span className={`tag ${countdownTag.urgent ? 'tag-countdown-urgent' : 'tag-countdown-calm'}`}>
+                {countdownTag.label}
+              </span>
+            )}
+            {action === ACTION_SAVE && <span className="tag tag-saved">Saved</span>}
+          </span>
+        )}
+      </div>
+
+      <div className="top-pick-name">
+        {item.name}
+        {!eventItem && item.zipCoverage === 'partial' && (
+          <span className="border-area-badge">Border area</span>
+        )}
+      </div>
+
+      <div className="top-pick-meta-row">
+        <span className="top-pick-meta-line">{topPickMetaLine(item, eventItem)}</span>
+        {metaTags.length > 0 && (
+          <span className="top-pick-meta-tags">
+            {metaTags.map((t) => (
+              <span key={t.type} className={`tag tag-${t.type}`}>
+                {t.label}
+              </span>
+            ))}
+          </span>
+        )}
+      </div>
+
+      {(entry.reason || entry.whyNow) && (
+        <div className="top-pick-ai-box">
+          {entry.reason && (
+            <div className="ai-section">
+              <div className="ai-section-title">Why it fits</div>
+              <div className="ai-section-body">{entry.reason}</div>
+            </div>
+          )}
+          {entry.whyNow && (
+            <div className="ai-section">
+              <div className="ai-section-title">Why now</div>
+              <div className="ai-section-body">{entry.whyNow}</div>
+            </div>
+          )}
         </div>
       )}
-      {hasDetails && (
-        <>
+
+      <div className="top-pick-actions-row">
+        <button
+          type="button"
+          className={`action-button action-button-primary${action === ACTION_CONVERSATION ? ' action-button-active' : ''}`}
+          onClick={() => onAction(item.id, ACTION_CONVERSATION)}
+        >
+          {conversationLabel}
+        </button>
+        <button
+          type="button"
+          className={`action-button action-button-secondary${action === ACTION_SAVE ? ' action-button-active' : ''}`}
+          onClick={() => onAction(item.id, ACTION_SAVE)}
+        >
+          {ACTION_LABELS[ACTION_SAVE]}
+        </button>
+        <button
+          type="button"
+          className={`action-button action-button-secondary${action === ACTION_SKIP ? ' action-button-active' : ''}`}
+          onClick={() => onAction(item.id, ACTION_SKIP)}
+        >
+          {ACTION_LABELS[ACTION_SKIP]}
+        </button>
+        {hasDetails && (
           <button
             type="button"
-            className="ai-toggle"
+            className="ai-toggle-link"
             aria-expanded={expanded}
             onClick={() => setExpanded((prev) => !prev)}
           >
             {expanded ? 'Hide how to get started' : 'How to get started'}
           </button>
-          {expanded && (
-            <div className="ai-details">
-              {hasWarmPath && (
-                <div className="ai-section">
-                  <div className="ai-section-title">Warm path</div>
-                  <div className="ai-section-body">{entry.warmPath}</div>
-                </div>
-              )}
-              {entry.howToStart && (
-                <div className="ai-section">
-                  <div className="ai-section-title">First step</div>
-                  <div className="ai-section-body">{entry.howToStart.firstStep}</div>
-                  <div className="ai-section-title">Why this approach</div>
-                  <div className="ai-section-body ai-section-subtle">{entry.howToStart.whyThisApproach}</div>
-                  <div className="ai-section-title">Opener</div>
-                  <div className="ai-section-body ai-section-opener">“{entry.howToStart.opener}”</div>
-                </div>
-              )}
+        )}
+      </div>
+
+      {hasDetails && expanded && (
+        <div className="ai-details">
+          {hasWarmPath && (
+            <div className="ai-section">
+              <div className="ai-section-title">Warm path</div>
+              <div className="ai-section-body">{entry.warmPath}</div>
             </div>
           )}
-        </>
+          {entry.howToStart && (
+            <div className="ai-section">
+              <div className="ai-section-title">First step</div>
+              <div className="ai-section-body">{entry.howToStart.firstStep}</div>
+              <div className="ai-section-title">Why this approach</div>
+              <div className="ai-section-body ai-section-subtle">{entry.howToStart.whyThisApproach}</div>
+              <div className="ai-section-title">Opener</div>
+              <div className="ai-section-body ai-section-opener">“{entry.howToStart.opener}”</div>
+            </div>
+          )}
+        </div>
       )}
-    </>
+
+      {eventItem ? <EventSourceLine e={item} /> : <BusinessSourceLine o={item} />}
+    </li>
   )
 }
 
@@ -440,20 +550,14 @@ function HomePage() {
             <h2 className="section-title">Your top picks right now</h2>
             <ul className="top-pick-list">
               {topPicks.map(({ item, entry }, index) => (
-                <li key={item.id} className="opportunity-card top-pick-card">
-                  <div className="top-pick-rank">#{index + 1}</div>
-                  {(entry.category || actions[item.id] === ACTION_SAVE) && (
-                    <div className="top-pick-tags">
-                      {entry.category && (
-                        <span className={`tag ${categoryTagClass(entry.category)}`}>{entry.category}</span>
-                      )}
-                      {actions[item.id] === ACTION_SAVE && <span className="tag tag-saved">Saved</span>}
-                    </div>
-                  )}
-                  {isEvent(item) ? <EventContent e={item} /> : <BusinessContent o={item} />}
-                  <AiSections entry={entry} />
-                  <ActionButtons id={item.id} action={actions[item.id]} onAction={handleAction} />
-                </li>
+                <TopPickCard
+                  key={item.id}
+                  item={item}
+                  entry={entry}
+                  index={index}
+                  action={actions[item.id]}
+                  onAction={handleAction}
+                />
               ))}
             </ul>
           </section>

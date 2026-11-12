@@ -752,7 +752,8 @@ body {
   accent-color: var(--color-primary);
 }
 
-.opportunity-grid {
+.opportunity-grid,
+.event-grid {
   list-style: none;
   margin: 0;
   padding: 0;
@@ -1008,15 +1009,6 @@ body {
   border-color: var(--color-primary-light);
 }
 
-.event-grid {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-}
-
 .event-card {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
@@ -1042,6 +1034,12 @@ body {
 
 .tag {
   display: inline-block;
+  /* Never wider than its card, even for a long tag label on a narrow
+     phone - the tags container (.event-tags, .top-pick-tags, etc.) wraps
+     between tags, but without this a single long tag could still overflow
+     on its own line. */
+  max-width: 100%;
+  overflow-wrap: break-word;
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.04em;

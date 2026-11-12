@@ -18,11 +18,26 @@
   --color-category-referral: #d97706;
   --color-category-event: #7c3aed;
 
+  /* .app's own left/right padding, factored out so the full-bleed
+     breakouts below (.full-bleed, .landing-backdrop, .feed-backdrop) can
+     cancel exactly the same value instead of approximating it with 100vw -
+     100vw/-50vw drifts from the real safe content edge on iOS, especially
+     in a standalone home-screen app, which was clipping their left edge
+     under body's overflow-x: hidden. Redeclared to match whenever .app's
+     own padding changes at a breakpoint - see the max-width: 480px query
+     below. */
+  --safe-pad-left: max(1.5rem, env(safe-area-inset-left));
+  --safe-pad-right: max(1.5rem, env(safe-area-inset-right));
+
   font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
 }
 
 * {
   box-sizing: border-box;
+}
+
+html {
+  overflow-x: hidden;
 }
 
 body {
@@ -43,9 +58,9 @@ body {
      a standalone app on iPhone - a no-op on devices/browsers without one. */
   padding:
     max(1.75rem, env(safe-area-inset-top))
-    max(1.5rem, env(safe-area-inset-right))
+    var(--safe-pad-right)
     max(4rem, env(safe-area-inset-bottom))
-    max(1.5rem, env(safe-area-inset-left));
+    var(--safe-pad-left);
 }
 
 .app-header {
@@ -145,12 +160,13 @@ body {
 
 /* Breaks an element out of .app's centered, padded column to span the
    full browser width - paired with an inner wrapper that re-centers the
-   actual content. */
+   actual content. Cancels .app's own left/right padding exactly (via the
+   same --safe-pad-* variables .app's padding uses) rather than sizing
+   with 100vw/-50vw, which doesn't reliably match the real safe content
+   edge on iOS. */
 .full-bleed {
-  width: 100vw;
-  position: relative;
-  left: 50%;
-  margin-left: -50vw;
+  margin-left: calc(-1 * var(--safe-pad-left));
+  margin-right: calc(-1 * var(--safe-pad-right));
 }
 
 /* One continuous backdrop behind the whole page - full browser width,
@@ -160,10 +176,11 @@ body {
 .landing-backdrop {
   position: absolute;
   top: 0;
-  left: 50%;
-  width: 100vw;
+  /* See .full-bleed above - left/right (not width: 100vw) so this spans
+     exactly as far as .app's own padding gives up, on any device. */
+  left: calc(-1 * var(--safe-pad-left));
+  right: calc(-1 * var(--safe-pad-right));
   height: 100%;
-  margin-left: -50vw;
   z-index: 0;
   pointer-events: none;
   /* A couple more soft purple glows further down the page, echoing the
@@ -675,9 +692,10 @@ body {
 .feed-backdrop {
   position: absolute;
   top: -28px;
-  left: 50%;
-  width: 100vw;
-  margin-left: -50vw;
+  /* See .full-bleed above - left/right (not width: 100vw) so this spans
+     exactly as far as .app's own padding gives up, on any device. */
+  left: calc(-1 * var(--safe-pad-left));
+  right: calc(-1 * var(--safe-pad-right));
   z-index: 0;
   pointer-events: none;
   background:
@@ -763,6 +781,10 @@ body {
   border-radius: 0.75rem;
   padding: 0.9rem 1.1rem;
   box-shadow: 0 1px 2px rgba(34, 28, 53, 0.04);
+  /* Grid items default to a min-width based on their content's intrinsic
+     size - without this, a long unbroken name can force its 1fr column
+     wider than the grid, overflowing the whole page horizontally. */
+  min-width: 0;
 }
 
 .opportunity-name {
@@ -772,6 +794,11 @@ body {
   align-items: center;
   gap: 0.5rem;
   flex-wrap: wrap;
+  /* A long, unbroken entity name (no spaces) would otherwise force this
+     flex item wider than the card on a narrow phone - flex items don't
+     shrink below their content's natural width unless both are set. */
+  min-width: 0;
+  overflow-wrap: break-word;
 }
 
 .opportunity-meta {
@@ -892,6 +919,8 @@ body {
   font-size: 1.35rem;
   color: var(--color-text);
   margin-top: 0.5rem;
+  min-width: 0;
+  overflow-wrap: break-word;
 }
 
 .top-pick-meta-row {
@@ -994,11 +1023,14 @@ body {
   border-radius: 0.75rem;
   padding: 0.9rem 1.1rem;
   box-shadow: 0 1px 2px rgba(34, 28, 53, 0.04);
+  /* See .opportunity-card above. */
+  min-width: 0;
 }
 
 .event-name {
   font-weight: 600;
   font-size: 1.08rem;
+  overflow-wrap: break-word;
 }
 
 .event-tags {
@@ -1278,12 +1310,17 @@ body {
 }
 
 @media (max-width: 480px) {
+  :root {
+    --safe-pad-left: max(1.1rem, env(safe-area-inset-left));
+    --safe-pad-right: max(1.1rem, env(safe-area-inset-right));
+  }
+
   .app {
     padding:
       max(1.25rem, env(safe-area-inset-top))
-      max(1.1rem, env(safe-area-inset-right))
+      var(--safe-pad-right)
       max(3rem, env(safe-area-inset-bottom))
-      max(1.1rem, env(safe-area-inset-left));
+      var(--safe-pad-left);
   }
 
   .app-header {

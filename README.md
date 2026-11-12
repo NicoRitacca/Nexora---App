@@ -2,7 +2,7 @@
 
 Nico Ritacca — CUA Busch School AI Vibe Coding Contest, Fall 2026
 
-**Live:** https://main.d3iy4xw5t934am.amplifyapp.com
+**Live:** https://main.d1tg14xda4qrdj.amplifyapp.com
 
 **Your companion for new opportunities.**
 
@@ -47,7 +47,7 @@ Only business-level data is ever stored, shown, or committed — entity name, ty
 
 ## Current status
 
-The backend code is complete, and its prompt and model have been tested locally with real Claude output. It can't deploy yet because an AWS organization policy blocks the backend deploy. Until that's resolved, the live site shows real Claude output: the same backend prompt and model, run locally and saved as a preview, instead of being called live.
+The live AI now runs on AWS: an Amplify backend with a Lambda function that calls Claude Haiku directly. The original AWS account's organization policy blocked the backend deploy, so the app moved to a new, standalone AWS account where that restriction doesn't apply. If the live AI is ever unavailable, the feed falls back to a saved preview ranking instead of failing.
 
 ## Run it locally
 

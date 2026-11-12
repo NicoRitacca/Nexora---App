@@ -11,6 +11,9 @@ const schema = a.schema({
   RankedOpportunity: a.customType({
     id: a.string().required(),
     rank: a.integer().required(),
+    // Optional, not required - parseRanking() in prompt.js can return null
+    // when Claude's category doesn't match one of the valid CATEGORIES.
+    category: a.string(),
     reason: a.string().required(),
     whyNow: a.string().required(),
     warmPath: a.string().required(),

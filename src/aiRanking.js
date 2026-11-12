@@ -134,7 +134,11 @@ export async function getAiRanking(opportunities, profile) {
 
   const result = await withTimeout(
     getClient().queries.rankOpportunities({
-      input: {
+      // The generated client passes this straight through as the GraphQL
+      // variable without serializing it - the `input` argument is AWSJSON,
+      // which AppSync requires as a JSON string, so it must be stringified
+      // here or every call fails with "Variable 'input' has an invalid value."
+      input: JSON.stringify({
         opportunities: opportunities.map(serializeItem),
         profile: {
           specialties: profile.specialties,
@@ -143,7 +147,7 @@ export async function getAiRanking(opportunities, profile) {
           outreachStyles: profile.outreachStyles,
           network: profile.network,
         },
-      },
+      }),
     }),
     AI_TIMEOUT_MS
   )

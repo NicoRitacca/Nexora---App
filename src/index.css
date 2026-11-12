@@ -175,51 +175,9 @@ body {
     radial-gradient(ellipse 45% 32% at 78% 78%, rgba(124, 58, 237, 0.1), transparent 70%);
 }
 
-.connection-field {
+.sparks-field {
   display: block;
-  color: var(--color-primary);
-  opacity: 0.6;
-}
-
-.connection-lines line {
-  opacity: 0.4;
-}
-
-.connection-dots circle,
-.connection-loose-stars circle {
-  fill: currentColor;
-}
-
-.glow-dot {
-  fill: currentColor;
-  animation: glow-pulse 3.2s ease-in-out infinite;
-}
-
-.glow-dot-blue {
-  color: #2563eb;
-  filter: drop-shadow(0 0 5px rgba(37, 99, 235, 0.9));
-}
-
-.glow-dot-purple {
-  color: #7c3aed;
-  filter: drop-shadow(0 0 5px rgba(124, 58, 237, 0.9));
-  animation-delay: 1.1s;
-}
-
-@keyframes glow-pulse {
-  0%,
-  100% {
-    opacity: 0.5;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-
-@media (max-width: 760px) {
-  .connection-field {
-    display: none;
-  }
+  opacity: 0.78;
 }
 
 .landing-hero {
@@ -710,8 +668,9 @@ body {
 /* Same full-bleed backdrop technique as .landing-backdrop, but fainter so
    the cards on this page stay easy to read. Shifted up by the gap above
    .feed (the app header's margin-bottom) and given matching extra height
-   (via the taller ConnectionField passed in HomePage.jsx) so the
-   starfield bleeds all the way up behind the header tile with no seam,
+   (via the taller SparksField passed in HomePage.jsx, plus its
+   topOffset prop so sparks burst at the right spot relative to .feed) so
+   the sparks bleed all the way up behind the header tile with no seam,
    while still reaching exactly as far down as before. */
 .feed-backdrop {
   position: absolute;
@@ -726,8 +685,8 @@ body {
     radial-gradient(ellipse 45% 28% at 80% 50%, rgba(124, 58, 237, 0.05), transparent 70%);
 }
 
-.feed-backdrop .connection-field {
-  opacity: 0.32;
+.feed-backdrop .sparks-field {
+  opacity: 0.45;
 }
 
 .feed-content {

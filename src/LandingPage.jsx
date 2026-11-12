@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { ConnectionField, useBackdropSize } from './ConstellationBackground.jsx'
+import { SparksField, useBackdropSize } from './SparksBackground.jsx'
 
 // Reveals a tile once it scrolls into view, then stops watching - a
 // one-time entrance, not a repeating effect. If IntersectionObserver isn't
@@ -239,7 +239,9 @@ function LandingPage({ onGetStarted }) {
   return (
     <div className="landing" ref={landingRef}>
       <div className="landing-backdrop">
-        {width > 0 && height > 0 && <ConnectionField width={width} height={height} />}
+        {width > 0 && height > 0 && (
+          <SparksField width={width} height={height} containerRef={landingRef} />
+        )}
       </div>
 
       <div className="landing-hero full-bleed">

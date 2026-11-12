@@ -11,7 +11,7 @@ import { fetchOpportunities } from './opportunities.js'
 import { fetchEvents } from './events.js'
 import { rankOpportunitiesBasic } from './rankingFallback.js'
 import { getAiRanking, isMockAi } from './aiRanking.js'
-import { ConnectionField, useBackdropSize } from './ConstellationBackground.jsx'
+import { SparksField, useBackdropSize } from './SparksBackground.jsx'
 
 const MAX_OPPORTUNITIES = 10
 const MAX_EVENTS = 10
@@ -428,8 +428,9 @@ function HomePage() {
         if (cancelled) return
         setAiRanking(ranking)
       })
-      .catch(() => {
+      .catch((err) => {
         if (cancelled) return
+        console.error('AI ranking failed, falling back:', err)
         setAiRanking(null)
         setAiUnavailable(true)
       })
@@ -509,9 +510,11 @@ function HomePage() {
     <div className="feed" ref={feedRef}>
       <div className="feed-backdrop">
         {backdropWidth > 0 && backdropHeight > 0 && (
-          <ConnectionField
+          <SparksField
             width={backdropWidth}
             height={backdropHeight + BACKDROP_TOP_EXTENSION}
+            containerRef={feedRef}
+            topOffset={BACKDROP_TOP_EXTENSION}
           />
         )}
       </div>

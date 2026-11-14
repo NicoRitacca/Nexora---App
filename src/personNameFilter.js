@@ -1,11 +1,15 @@
 // Cautious check for a Sunbiz business name that is essentially a person's
-// name plus an entity suffix (e.g. "ANDREW HILL, LLC", "JOHN M SMITH LLC").
-// Flags only when every remaining word, after the entity suffix is
-// stripped, is itself a common first or last name - so a real business name
-// that happens to contain a common surname (e.g. "DIXON SALES TEAM LLC",
-// "SANCHEZ VENDOR SERVICES LLC") is never flagged, since "SALES"/"TEAM" or
-// "VENDOR"/"SERVICES" aren't name words. This intentionally favors missing
-// some person-named filings over hiding real businesses.
+// name plus an entity suffix (e.g. "ANDREW HILL, LLC", "JOHN M SMITH LLC",
+// "KURT KASPAR LLC"). Flags a 3-word core only when every word is itself a
+// common first or last name - so a real business name that happens to
+// contain a common surname (e.g. "DIXON SALES TEAM LLC", "SANCHEZ VENDOR
+// SERVICES LLC") is never flagged, since "SALES"/"TEAM" or "VENDOR"/
+// "SERVICES" aren't name words. For a 2-word core, a common first name
+// followed by any one other word is also flagged - unless that other word
+// is a known business/industry term (see BUSINESS_WORDS), which protects
+// real "<first name> <product/service>"-style business names (e.g. "SEAN
+// SOLUTIONS LLC"). This intentionally favors missing some person-named
+// filings over hiding real businesses.
 
 // Common entity-suffix words (after stripping punctuation), stripped
 // repeatedly from the end of the name before the name check runs.
@@ -21,7 +25,7 @@ const FIRST_NAMES = new Set([
   'JAMES', 'JOHN', 'ROBERT', 'MICHAEL', 'WILLIAM', 'DAVID', 'RICHARD', 'JOSEPH',
   'THOMAS', 'CHARLES', 'CHRISTOPHER', 'DANIEL', 'MATTHEW', 'ANTHONY', 'MARK',
   'DONALD', 'STEVEN', 'PAUL', 'ANDREW', 'JOSHUA', 'KENNETH', 'KEVIN', 'BRIAN',
-  'GEORGE', 'TIMOTHY', 'RONALD', 'EDWARD', 'JASON', 'JEFFREY', 'RYAN', 'JACOB',
+  'GEORGE', 'TIMOTHY', 'RONALD', 'EDWARD', 'JASON', 'JEFFREY', 'RYAN', 'JACOB', 'KURT',
   'GARY', 'NICHOLAS', 'ERIC', 'JONATHAN', 'STEPHEN', 'LARRY', 'JUSTIN', 'SCOTT',
   'BRANDON', 'BENJAMIN', 'SAMUEL', 'GREGORY', 'ALEXANDER', 'FRANK', 'PATRICK',
   'RAYMOND', 'JACK', 'DENNIS', 'JERRY', 'TYLER', 'AARON', 'JOSE', 'ADAM',
@@ -90,6 +94,42 @@ const LAST_NAMES = new Set([
   'WELCH', 'ROJAS', 'LUCAS', 'MARQUEZ', 'FIELDS', 'LYNN', 'CATLETT', 'MOLLOY',
 ])
 
+// Common generic business/industry nouns - a second word drawn from this
+// list means the name is almost certainly "<first name> <what it sells>",
+// not a person's own two-word name, so it's never flagged even when the
+// first word is a common first name.
+const BUSINESS_WORDS = new Set([
+  'GROUP', 'VENTURES', 'VENTURE', 'SOLUTIONS', 'SOLUTION', 'HOLDINGS', 'HOLDING',
+  'ENTERPRISES', 'ENTERPRISE', 'PROPERTIES', 'PROPERTY', 'REALTY', 'SERVICES',
+  'SERVICE', 'CONSULTING', 'MANAGEMENT', 'CAPITAL', 'PARTNERS', 'PARTNER',
+  'ASSOCIATES', 'TRANSPORT', 'TRANSPORTATION', 'LOGISTICS', 'TRUCKING',
+  'DELIVERY', 'CLEANING', 'CLEANERS', 'RENTALS', 'RENTAL', 'AUTO', 'AUTOMOTIVE',
+  'MOTORS', 'MOTORWORKS', 'DETAILING', 'TOWING', 'CHARTERS', 'CHARTER', 'TOURS',
+  'TOUR', 'PHOTOGRAPHY', 'VIDEOGRAPHY', 'PRODUCTIONS', 'PRODUCTION', 'STUDIO',
+  'STUDIOS', 'MEDIA', 'MARKETING', 'ADVERTISING', 'DIGITAL', 'TECHNOLOGY',
+  'TECHNOLOGIES', 'TECH', 'SOFTWARE', 'DEVELOPMENT', 'DEVELOPMENTS',
+  'DEVELOPERS', 'DESIGN', 'DESIGNS', 'FINANCIAL', 'FINANCE', 'FUNDING', 'FUNDS',
+  'FUND', 'LENDING', 'LENDERS', 'INSURANCE', 'MORTGAGE', 'INVESTMENTS',
+  'INVESTMENT', 'ACCOUNTING', 'BOOKKEEPING', 'TAX', 'LEGAL', 'LAW', 'ATTORNEYS',
+  'ADVISORY', 'ADVISORS', 'ADVISOR', 'STAFFING', 'RECRUITING', 'CATERING',
+  'EVENTS', 'EVENT', 'ENTERTAINMENT', 'SECURITY', 'STORAGE', 'SUPPLY',
+  'SUPPLIES', 'WHOLESALE', 'RETAIL', 'MARKET', 'MARKETS', 'IMPORTS', 'EXPORTS',
+  'TRADING', 'DISTRIBUTORS', 'DISTRIBUTION', 'GLOBAL', 'INTERNATIONAL',
+  'EXPRESS', 'FOOD', 'FOODS', 'APPAREL', 'FASHION', 'JEWELRY', 'FURNITURE',
+  'DECOR', 'HOME', 'HOMES', 'PETS', 'CARE', 'HEALTH', 'HEALTHCARE', 'WELLNESS',
+  'FITNESS', 'GYM', 'YOGA', 'NAILS', 'HAIR', 'BEAUTY', 'SALON', 'SPA', 'DELI',
+  'PIZZA', 'BAKERY', 'CAFE', 'COFFEE', 'DINER', 'GRILL', 'KITCHEN', 'DESSERTS',
+  'SWEETS', 'CANDY', 'BOUTIQUE', 'SHOP', 'STORE', 'GROCERY', 'PHARMACY',
+  'CLINIC', 'DENTAL', 'MEDICAL', 'THERAPY', 'COUNSELING', 'PLUMBING',
+  'ELECTRIC', 'ELECTRICAL', 'ROOFING', 'FLOORING', 'PAINTING', 'LANDSCAPING',
+  'CONSTRUCTION', 'CONTRACTING', 'CONTRACTORS', 'BUILDERS', 'REMODELING',
+  'REPAIR', 'REPAIRS', 'PERFORMANCE', 'BUSINESS', 'COMMERCE', 'TEAM',
+  'COLLECTIVE', 'NETWORK', 'NETWORKING', 'BRANDS', 'BRAND', 'CORE', 'LAB',
+  'LABS', 'HUB', 'WORKS', 'SYSTEMS', 'STRATEGIES', 'STRATEGY', 'PERMITS',
+  'PERMIT', 'CABINETS', 'GRANITE', 'STONE', 'CONCRETE', 'EXTERIOR', 'INTERIOR',
+  'ELEVATION', 'ASSURANCE', 'INTEGRITY', 'LEGACY', 'EXPERTS', 'EXPERT',
+])
+
 export function isLikelyPersonName(rawName) {
   if (!rawName) return false
 
@@ -108,6 +148,18 @@ export function isLikelyPersonName(rawName) {
 
   if (tokens.length < 2 || tokens.length > 3) return false
 
+  if (tokens.length === 2) {
+    const [first, second] = tokens
+    // "FIRST_NAME LAST_NAME" (e.g. "ANDREW HILL").
+    if (FIRST_NAMES.has(first) && LAST_NAMES.has(second)) return true
+    // "FIRST_NAME <any other word>" (e.g. "KURT KASPAR"), unless that other
+    // word is a known business/industry term (e.g. "SEAN SOLUTIONS").
+    if (FIRST_NAMES.has(first) && second.length > 1 && !BUSINESS_WORDS.has(second)) return true
+    return false
+  }
+
+  // 3-word core (e.g. "JOHN M SMITH", "MOLLY MOLLOY CATLETT") - every word
+  // must be a recognized name word (a single letter counts as an initial).
   const isNameWord = (t) => t.length === 1 || FIRST_NAMES.has(t) || LAST_NAMES.has(t)
   if (!tokens.every(isNameWord)) return false
 

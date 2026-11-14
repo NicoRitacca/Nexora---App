@@ -375,11 +375,18 @@ function HomePage() {
       .catch(() => setEvents([]))
   }, [])
 
+  // `matched` feeds every place a business can appear - top picks,
+  // "More new businesses", all of it - so the future-dated guard here
+  // (belt-and-suspenders alongside fetchOpportunities()'s own filter; see
+  // src/opportunities.js) covers all of them at once, including a business
+  // from a stale cached fetch of opportunities.json.
   const matched = useMemo(() => {
     const cities = new Set(profile.cities)
     const zips = new Set(parseZips(profile.zips || ''))
+    const todayStr = getTodayStr()
     const filtered = opportunities
       .filter((o) => cities.has(o.city) || zips.has(o.zip))
+      .filter((o) => o.date <= todayStr)
       // A skip stays hidden for the rest of the week, so the next business
       // can fill the slot it would have taken.
       .filter((o) => actions[o.id] !== ACTION_SKIP)

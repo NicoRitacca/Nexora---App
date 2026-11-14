@@ -115,5 +115,63 @@
       { "type": "cost", "label": "Cost unknown" },
       { "type": "format", "label": "Entrepreneur showcase" }
     ]
+  },
+  {
+    "id": "evt-emerging-leaders-annual-meeting",
+    "source": "manual",
+    "type": "event",
+    "name": "2026 Emerging Leaders of Tampa Bay Annual Meeting",
+    "eventType": "Evening networking",
+    "date": "2026-12-01",
+    "startTime": "17:30",
+    "endTime": "20:30",
+    "venue": "The Motor Enclave",
+    "city": "Tampa",
+    "zip": "",
+    "hostingOrg": "Tampa Bay Chamber",
+    "tags": [
+      { "type": "audience", "label": "Emerging professionals" },
+      { "type": "cost", "label": "Cost unknown" },
+      { "type": "format", "label": "Evening networking" }
+    ],
+    "url": "https://www.tampabaychamber.com/events/"
+  },
+  {
+    "id": "evt-light-up-the-season-soiree",
+    "source": "manual",
+    "type": "event",
+    "name": "Light Up the Season: LTA Annual Soiree",
+    "eventType": "Evening mixer",
+    "date": "2026-12-09",
+    "startTime": "18:00",
+    "endTime": "20:00",
+    "venue": "JC Newman Cigar Company",
+    "city": "Tampa",
+    "zip": "",
+    "hostingOrg": "Tampa Bay Chamber",
+    "tags": [
+      { "type": "cost", "label": "Cost unknown" },
+      { "type": "format", "label": "Evening mixer" }
+    ],
+    "url": "https://www.tampabaychamber.com/events/"
+  },
+  {
+    "id": "evt-141st-annual-meeting-purpose-celebration",
+    "source": "manual",
+    "type": "event",
+    "name": "141st Annual Meeting & Purpose Celebration",
+    "eventType": "Annual luncheon",
+    "date": "2026-12-11",
+    "startTime": "11:00",
+    "endTime": "13:30",
+    "venue": "Tampa Convention Center",
+    "city": "Tampa",
+    "zip": "33602",
+    "hostingOrg": "Tampa Bay Chamber",
+    "tags": [
+      { "type": "cost", "label": "Cost unknown" },
+      { "type": "format", "label": "Annual luncheon" }
+    ],
+    "url": "https://www.tampabaychamber.com/events/"
   }
 ]

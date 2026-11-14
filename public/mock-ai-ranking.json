@@ -1,41 +1,67 @@
 [
   {
-    "id": "evt-coffee-connection",
+    "id": "L26000567183",
     "rank": 1,
-    "category": "Networking event",
-    "reason": "This morning networking event at a public venue fits your in-person outreach style and your experience with a networking breakfast group.",
-    "whyNow": "This event is on Nov 18 from 8:30 AM to 10:00 AM, which leaves time to plan your attendance.",
-    "warmPath": "Your chamber of commerce membership gives you a natural reason to attend, and you can ask chamber staff to introduce you to a few attendees.",
+    "category": "Potential client",
+    "reason": "The name suggests a document services business, and as a Florida LLC it may be a small business that could need a retirement plan.",
+    "whyNow": "Registered Nov 15, so the owners are likely still making early decisions about benefits and retirement options.",
+    "warmPath": "Ask your CPA firm contact whether they work with any owners of this business.",
     "howToStart": {
-      "firstStep": "Register to attend the Coffee Connection on Nov 18 at Lions World Vision Institute and plan to introduce yourself to two or three small-business owners.",
-      "whyThisApproach": "Your preferred outreach styles are in person and introductions, and this morning format matches both.",
-      "opener": "Hi, I'm a financial advisor focused on retirement plans for small businesses, and I'd love to hear what your team is working on."
+      "firstStep": "Check whether the business has a public website or online listing that describes its services and team.",
+      "whyThisApproach": "Your specialty is small-business retirement plans, so confirming what the business does first keeps your outreach relevant and low-pressure.",
+      "opener": "I work with small businesses on retirement plans, and I noticed your LLC was recently formed, so I wanted to introduce myself in case it's useful to you."
     }
   },
   {
-    "id": "L26000551769",
+    "id": "evt-emerging-leaders-annual-meeting",
     "rank": 2,
-    "category": "Potential referral partner",
-    "reason": "The name suggests a possible solutions or bookkeeping-type firm, which could serve small businesses that need retirement plan referrals.",
-    "whyNow": "Registered on Nov 1, so the firm is still in its early stages and may be building its professional relationships.",
-    "warmPath": "Ask your CPA firm contact whether they know the people behind LEDGERSTONE SOLUTIONS LLC or work with similar firms.",
+    "category": "Networking event",
+    "reason": "This in-person evening event is tagged for emerging professionals, which fits an advisor with four years of experience.",
+    "whyNow": "This event is on Dec 1 from 5:30 PM to 8:30 PM, so there is time to plan attendance and reach out beforehand.",
+    "warmPath": "Your standing with the chamber of commerce gives you a natural reason to attend, and you can ask chamber staff to introduce you to a few attendees.",
     "howToStart": {
-      "firstStep": "Check whether LEDGERSTONE SOLUTIONS LLC has a public website or online listing that describes its services.",
-      "whyThisApproach": "Your CPA firm connection suggests a referral-based approach fits your network, and a website can confirm what the firm does.",
-      "opener": "I work with small businesses on retirement plans and thought we might be able to refer clients to each other."
+      "firstStep": "Register for the event and plan to attend in person at The Motor Enclave.",
+      "whyThisApproach": "Your preferred outreach is in person, and this evening event gives you a direct face-to-face setting.",
+      "opener": "I'm an advisor focused on small-business retirement plans, and I'm trying to meet more people building businesses in Tampa Bay."
     }
   },
   {
-    "id": "evt-tampa-entrepreneurship-showcase",
+    "id": "evt-get-connected",
     "rank": 3,
     "category": "Networking event",
-    "reason": "An entrepreneur showcase at a public center puts you in front of small-business owners, your core market.",
-    "whyNow": "This event is on Nov 19 from 5:00 PM to 7:00 PM, so you can plan an evening visit.",
-    "warmPath": "Ask your estate planning attorney's office whether they have connections to entrepreneurs who present at this kind of showcase.",
+    "reason": "This in-person afternoon networking event gives you a chance to meet local business people through introductions.",
+    "whyNow": "This event is on Dec 2 from 3:00 PM to 5:00 PM, so it is a good time to ask contacts whether they plan to attend.",
+    "warmPath": "Ask your networking breakfast group whether any members plan to attend, so you can arrange introductions there.",
     "howToStart": {
-      "firstStep": "Attend the Tampa Entrepreneurship Showcase & Networking Night on Nov 19 at the Entrepreneur Collaborative Center and speak with presenters after their showcases.",
-      "whyThisApproach": "In-person conversations match your preferred outreach style, and presenters are likely to be open to discussing their business needs.",
-      "opener": "I help small businesses set up retirement plans for their employees, and I'd like to learn more about what you're building."
+      "firstStep": "Ask a contact from your networking breakfast group if they are attending, and request an introduction to one or two people there.",
+      "whyThisApproach": "You prefer introductions, and your breakfast group is a natural place to get them before the event.",
+      "opener": "I specialize in retirement plans for small businesses, and I'd love to meet anyone you think could benefit from that."
+    }
+  },
+  {
+    "id": "L26000567872",
+    "rank": 4,
+    "category": "Potential client",
+    "reason": "The name suggests a technology business, and as a Florida LLC it may be a small business that could need a retirement plan.",
+    "whyNow": "Registered Nov 16, so the owners are likely still early in setting up their business decisions, including benefits.",
+    "warmPath": "Ask your CPA firm contact whether they have any clients who know the owners of this business.",
+    "howToStart": {
+      "firstStep": "Check whether the business has a public website or online listing that describes what it does.",
+      "whyThisApproach": "Confirming the business's line of work first fits your small-business retirement focus without making assumptions.",
+      "opener": "I help small businesses set up retirement plans, and since your company is newly registered, I wanted to introduce myself."
+    }
+  },
+  {
+    "id": "evt-141st-annual-meeting-purpose-celebration",
+    "rank": 5,
+    "category": "Networking event",
+    "reason": "This in-person annual luncheon at a large venue offers a broad group of local business people to meet through introductions.",
+    "whyNow": "This event is on Dec 11 from 11:00 AM to 1:30 PM, which leaves time to request introductions before the luncheon.",
+    "warmPath": "Ask your estate planning attorney's office whether they plan to attend, so you can arrange an introduction there.",
+    "howToStart": {
+      "firstStep": "Ask a contact from your estate planning attorney's office whether they are attending, and request an introduction to a few attendees.",
+      "whyThisApproach": "Your preferred outreach includes introductions, and a trusted contact can make the first connection at a luncheon.",
+      "opener": "I focus on retirement plans for small businesses, and I'd like to meet people who work with local business owners."
     }
   }
 ]

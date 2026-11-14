@@ -73,6 +73,13 @@ function matchOpportunities(opportunities, profile) {
   return rankOpportunitiesBasic(filtered).slice(0, MAX_OPPORTUNITIES);
 }
 
+// Optional override for which date counts as "today" when deciding event
+// eligibility below - e.g. `--events-as-of=2026-11-20` to preview which
+// events will still be eligible once today's date has moved on, without
+// changing the "Today's date" actually sent to Claude in the prompt.
+const EVENTS_AS_OF_ARG = process.argv.find((a) => a.startsWith("--events-as-of="));
+const EVENTS_AS_OF = EVENTS_AS_OF_ARG ? EVENTS_AS_OF_ARG.split("=")[1] : null;
+
 // Same matching rules as the `aiEligibleEvents` memo in src/HomePage.jsx -
 // an advisor can't plan ahead for an event happening today or already past,
 // so those are excluded here (the "Upcoming events" list in the app itself
@@ -80,7 +87,7 @@ function matchOpportunities(opportunities, profile) {
 // display-only concern this script doesn't need to reproduce).
 function matchEvents(events, profile) {
   const cities = new Set(profile.cities);
-  const todayStr = getTodayStr();
+  const todayStr = EVENTS_AS_OF || getTodayStr();
   return events
     .filter((e) => cities.has(e.city) && e.date > todayStr)
     .sort((a, b) => (a.date === b.date ? a.startTime.localeCompare(b.startTime) : a.date.localeCompare(b.date)))
@@ -119,6 +126,7 @@ async function main() {
   const matchedEvents = matchEvents([...handEnteredEvents, ...feedEvents], profile);
   const items = capItems([...matchedOpportunities, ...matchedEvents]);
 
+  if (EVENTS_AS_OF) console.log(`Treating ${EVENTS_AS_OF} as today for event eligibility only.`);
   console.log(`Advisor profile: ${profile.experience} experience, ${profile.specialties}`);
   console.log(`Covers: ${profile.cities.join(", ")}`);
   console.log(`Matched ${matchedOpportunities.length} business filing(s) and ${matchedEvents.length} event(s).`);

@@ -6,11 +6,15 @@ import {
   ACTION_CONVERSATION,
   ACTION_SAVE,
   ACTION_SKIP,
+  addPick,
+  removePick,
+  loadAddedPicksThisWeek,
 } from './storage.js'
 import { fetchOpportunities } from './opportunities.js'
 import { fetchEvents } from './events.js'
 import { rankOpportunitiesBasic } from './rankingFallback.js'
 import { getAiRanking, isMockAi } from './aiRanking.js'
+import { buildManualEntry } from './manualHowToStart.js'
 import { SparksField, useBackdropSize } from './SparksBackground.jsx'
 
 const MAX_OPPORTUNITIES = 10
@@ -213,27 +217,31 @@ function categoryAccentClass(category) {
   return categoryTagClass(category).replace('tag-category', 'top-pick-accent')
 }
 
-function TopPickCard({ item, entry, index, action, onAction }) {
+function TopPickCard({ item, entry, index, action, onAction, manuallyAdded, onRemove }) {
   const [expanded, setExpanded] = useState(false)
   const eventItem = isEvent(item)
   const countdownTag = eventItem ? getCountdownTag(item) : null
   const metaTags = eventItem ? visibleTags(item.tags) : []
-  const hasWarmPath = entry.warmPath && entry.warmPath !== 'none'
-  const hasDetails = hasWarmPath || entry.howToStart
-  const hasTopTags = entry.category || countdownTag || action === ACTION_SAVE
+  const hasWarmPath = entry?.warmPath && entry.warmPath !== 'none'
+  const hasDetails = hasWarmPath || entry?.howToStart
+  const hasTopTags = manuallyAdded || entry?.category || countdownTag || action === ACTION_SAVE
   // Same action and the same weekly-progress count either way - "Plan to
   // attend" just reads more naturally than "Start a conversation" for an
   // event you'd attend rather than call or email.
   const conversationLabel = eventItem ? 'Plan to attend' : ACTION_LABELS[ACTION_CONVERSATION]
 
   return (
-    <li className={`opportunity-card top-pick-card ${categoryAccentClass(entry.category)}`}>
+    <li className={`opportunity-card top-pick-card ${categoryAccentClass(entry?.category)}`}>
       <div className="top-pick-topline">
         <span className="top-pick-rank">#{index + 1}</span>
         {hasTopTags && (
           <span className="top-pick-tags">
-            {entry.category && (
-              <span className={`tag ${categoryTagClass(entry.category)}`}>{entry.category}</span>
+            {manuallyAdded ? (
+              <span className="tag tag-manual">Added by you</span>
+            ) : (
+              entry?.category && (
+                <span className={`tag ${categoryTagClass(entry.category)}`}>{entry.category}</span>
+              )
             )}
             {countdownTag && (
               <span className={`tag ${countdownTag.urgent ? 'tag-countdown-urgent' : 'tag-countdown-calm'}`}>
@@ -265,7 +273,7 @@ function TopPickCard({ item, entry, index, action, onAction }) {
         )}
       </div>
 
-      {(entry.reason || entry.whyNow) && (
+      {(entry?.reason || entry?.whyNow) && (
         <div className="top-pick-ai-box">
           {entry.reason && (
             <div className="ai-section">
@@ -314,6 +322,11 @@ function TopPickCard({ item, entry, index, action, onAction }) {
             {expanded ? 'Hide how to get started' : 'How to get started'}
           </button>
         )}
+        {manuallyAdded && (
+          <button type="button" className="ai-toggle-link" onClick={() => onRemove(item.id)}>
+            Remove from picks
+          </button>
+        )}
       </div>
 
       {hasDetails && expanded && (
@@ -328,10 +341,18 @@ function TopPickCard({ item, entry, index, action, onAction }) {
             <div className="ai-section">
               <div className="ai-section-title">First step</div>
               <div className="ai-section-body">{entry.howToStart.firstStep}</div>
-              <div className="ai-section-title">Why this approach</div>
-              <div className="ai-section-body ai-section-subtle">{entry.howToStart.whyThisApproach}</div>
-              <div className="ai-section-title">Opener</div>
-              <div className="ai-section-body ai-section-opener">“{entry.howToStart.opener}”</div>
+              {entry.howToStart.whyThisApproach && (
+                <>
+                  <div className="ai-section-title">Why this approach</div>
+                  <div className="ai-section-body ai-section-subtle">{entry.howToStart.whyThisApproach}</div>
+                </>
+              )}
+              {entry.howToStart.opener && (
+                <>
+                  <div className="ai-section-title">Opener</div>
+                  <div className="ai-section-body ai-section-opener">“{entry.howToStart.opener}”</div>
+                </>
+              )}
             </div>
           )}
         </div>
@@ -351,6 +372,7 @@ function HomePage() {
   const [aiUnavailable, setAiUnavailable] = useState(false)
   const [aiLoading, setAiLoading] = useState(false)
   const [actions, setActions] = useState(() => loadActionsThisWeek())
+  const [addedPickIds, setAddedPickIds] = useState(() => loadAddedPicksThisWeek())
   const [showAllBusinesses, setShowAllBusinesses] = useState(false)
   const [showAllEvents, setShowAllEvents] = useState(false)
 
@@ -362,6 +384,16 @@ function HomePage() {
   function handleAction(id, choice) {
     recordAction(id, choice)
     setActions(loadActionsThisWeek())
+  }
+
+  function handleAddPick(id) {
+    addPick(id)
+    setAddedPickIds(loadAddedPicksThisWeek())
+  }
+
+  function handleRemovePick(id) {
+    removePick(id)
+    setAddedPickIds(loadAddedPicksThisWeek())
   }
 
   useEffect(() => {
@@ -479,14 +511,36 @@ function HomePage() {
 
   const topPickIds = useMemo(() => new Set(topPicks.map((pick) => pick.item.id)), [topPicks])
 
+  // Businesses/events the advisor moved up themselves via "Add to my picks"
+  // on a lower card - shown below the AI's own picks. Excludes anything
+  // already an AI pick, in case the AI ranking changes to include an item
+  // added earlier in the week.
+  const manualPicks = useMemo(() => {
+    const byId = {}
+    matched.forEach((o) => {
+      byId[o.id] = o
+    })
+    matchedEvents.forEach((e) => {
+      byId[e.id] = e
+    })
+    return [...addedPickIds]
+      .filter((id) => !topPickIds.has(id))
+      .map((id) => byId[id])
+      .filter(Boolean)
+      // No AI call for a manually-added pick - its "How to get started" is
+      // built from a template instead, using only the item and the
+      // advisor's own profile. See src/manualHowToStart.js.
+      .map((item) => ({ item, entry: buildManualEntry(item, profile, isEvent(item)) }))
+  }, [addedPickIds, topPickIds, matched, matchedEvents, profile])
+
   const remainingBusinesses = useMemo(
-    () => matched.filter((o) => !topPickIds.has(o.id)),
-    [matched, topPickIds]
+    () => matched.filter((o) => !topPickIds.has(o.id) && !addedPickIds.has(o.id)),
+    [matched, topPickIds, addedPickIds]
   )
 
   const remainingEvents = useMemo(
-    () => matchedEvents.filter((e) => !topPickIds.has(e.id)),
-    [matchedEvents, topPickIds]
+    () => matchedEvents.filter((e) => !topPickIds.has(e.id) && !addedPickIds.has(e.id)),
+    [matchedEvents, topPickIds, addedPickIds]
   )
 
   const visibleBusinesses = hideBorderArea
@@ -502,7 +556,7 @@ function HomePage() {
     : remainingEvents.slice(0, COLLAPSED_GRID_COUNT)
 
   const greeting = getGreeting()
-  const hasTopPicks = topPicks.length > 0
+  const hasTopPicks = topPicks.length > 0 || manualPicks.length > 0
   const totalCount = matched.length
   const totalEventCount = matchedEvents.length
   const otherBusinessCount = remainingBusinesses.length
@@ -514,8 +568,9 @@ function HomePage() {
   ).length
   const progressPercent = weeklyGoal > 0 ? Math.min(100, (conversationsThisWeek / weeklyGoal) * 100) : 0
 
+  const topPickCount = topPicks.length + manualPicks.length
   const summaryText = hasTopPicks
-    ? `Here are your ${topPicks.length} best opportunit${topPicks.length === 1 ? 'y' : 'ies'} right now, plus ${otherBusinessCount} more new business${otherBusinessCount === 1 ? '' : 'es'} and ${otherEventCount} upcoming event${otherEventCount === 1 ? '' : 's'}.`
+    ? `Here are your ${topPickCount} best opportunit${topPickCount === 1 ? 'y' : 'ies'} right now, plus ${otherBusinessCount} more new business${otherBusinessCount === 1 ? '' : 'es'} and ${otherEventCount} upcoming event${otherEventCount === 1 ? '' : 's'}.`
     : totalCount === 0 && totalEventCount === 0
       ? "We didn't find any new businesses or upcoming events matching your coverage area yet."
       : `We found ${totalCount} new business${totalCount === 1 ? '' : 'es'} and ${totalEventCount} upcoming event${totalEventCount === 1 ? '' : 's'} that might be worth your time.`
@@ -576,6 +631,18 @@ function HomePage() {
                   onAction={handleAction}
                 />
               ))}
+              {manualPicks.map(({ item, entry }, index) => (
+                <TopPickCard
+                  key={item.id}
+                  item={item}
+                  entry={entry}
+                  index={topPicks.length + index}
+                  action={actions[item.id]}
+                  onAction={handleAction}
+                  manuallyAdded
+                  onRemove={handleRemovePick}
+                />
+              ))}
             </ul>
           </section>
         )}
@@ -595,6 +662,13 @@ function HomePage() {
               {businessesToShow.map((o) => (
                 <li key={o.id} className="opportunity-card">
                   <BusinessContent o={o} />
+                  <button
+                    type="button"
+                    className="ai-toggle-link add-to-picks-button"
+                    onClick={() => handleAddPick(o.id)}
+                  >
+                    + Add to my picks
+                  </button>
                 </li>
               ))}
             </ul>
@@ -617,6 +691,13 @@ function HomePage() {
               {eventsToShow.map((e) => (
                 <li key={e.id} className="event-card">
                   <EventContent e={e} />
+                  <button
+                    type="button"
+                    className="ai-toggle-link add-to-picks-button"
+                    onClick={() => handleAddPick(e.id)}
+                  >
+                    + Add to my picks
+                  </button>
                 </li>
               ))}
             </ul>

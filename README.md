@@ -84,6 +84,8 @@ node scripts/test-ranking.js
 ## Roadmap
 
 - Cross-device login, so an advisor's profile and progress follow them between devices
+- AI suggestions for picks the advisor adds
+- Automatic daily data refresh as a scheduled AWS job
 - Physicians finishing training
 - IRS Form 990 data (private foundations)
 - Form 5500 data (employer retirement plans)

@@ -91,6 +91,52 @@ export function loadActionsThisWeek() {
   return result
 }
 
+const ADDED_PICKS_STORAGE_KEY = 'nexora.addedPicks'
+
+function loadAllAddedPicks() {
+  try {
+    const raw = localStorage.getItem(ADDED_PICKS_STORAGE_KEY)
+    return raw ? JSON.parse(raw) : {}
+  } catch {
+    return {}
+  }
+}
+
+function saveAllAddedPicks(picks) {
+  try {
+    localStorage.setItem(ADDED_PICKS_STORAGE_KEY, JSON.stringify(picks))
+  } catch {
+    // ignore storage errors (e.g. private browsing, quota)
+  }
+}
+
+// Marks a business/event id as manually added to top picks, for the rest of
+// the current week - see loadAddedPicksThisWeek().
+export function addPick(id) {
+  const picks = loadAllAddedPicks()
+  picks[id] = { date: todayStr() }
+  saveAllAddedPicks(picks)
+}
+
+// Undoes addPick() - the item goes back to its normal list.
+export function removePick(id) {
+  const picks = loadAllAddedPicks()
+  delete picks[id]
+  saveAllAddedPicks(picks)
+}
+
+// Returns the set of ids added during the current week only - like
+// loadActionsThisWeek(), an addition from an earlier week no longer counts.
+export function loadAddedPicksThisWeek() {
+  const picks = loadAllAddedPicks()
+  const currentWeek = weekKey(todayStr())
+  const result = new Set()
+  Object.entries(picks).forEach(([id, pick]) => {
+    if (weekKey(pick.date) === currentWeek) result.add(id)
+  })
+  return result
+}
+
 const INSTALL_BANNER_DISMISSED_KEY = 'nexora.installBannerDismissed'
 
 export function isInstallBannerDismissed() {

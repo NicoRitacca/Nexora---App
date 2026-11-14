@@ -154,17 +154,6 @@
     "zipCoverage": "full"
   },
   {
-    "id": "L26000551092",
-    "source": "sunbiz",
-    "type": "business",
-    "name": "ANDREW HILL, LLC",
-    "entityType": "Florida LLC",
-    "date": "2026-10-28",
-    "city": "Tampa",
-    "zip": "33626",
-    "zipCoverage": "full"
-  },
-  {
     "id": "L26000551422",
     "source": "sunbiz",
     "type": "business",
@@ -426,17 +415,6 @@
     "date": "2026-10-23",
     "city": "Riverview",
     "zip": "33579",
-    "zipCoverage": "full"
-  },
-  {
-    "id": "L26000551126",
-    "source": "sunbiz",
-    "type": "business",
-    "name": "MOLLY MOLLOY CATLETT, LLC",
-    "entityType": "Florida LLC",
-    "date": "2026-10-28",
-    "city": "Tampa",
-    "zip": "33629",
     "zipCoverage": "full"
   },
   {

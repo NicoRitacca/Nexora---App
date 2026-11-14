@@ -454,12 +454,19 @@ function HomePage() {
   // The AI's top picks, in rank order, each paired with its matching
   // business or event. Empty whenever there's no AI ranking to show yet -
   // callers fall back to the plain business/event lists in that case.
+  //
+  // The explicit date check below is a deliberate belt-and-suspenders guard:
+  // candidatesById is already built only from date-filtered candidates, but
+  // a stale entry in the saved mock-AI fallback (public/mock-ai-ranking.json)
+  // or an old cached ranking must never be able to resurrect a past event
+  // here, no matter how it got matched.
   const topPicks = useMemo(() => {
     if (!aiRanking) return []
+    const todayStr = getTodayStr()
     return [...aiRanking]
       .sort((a, b) => a.rank - b.rank)
       .map((entry) => ({ item: candidatesById[entry.id], entry }))
-      .filter((pick) => pick.item)
+      .filter((pick) => pick.item && (!isEvent(pick.item) || pick.item.date >= todayStr))
       .slice(0, MAX_TOP_PICKS)
   }, [aiRanking, candidatesById])
 

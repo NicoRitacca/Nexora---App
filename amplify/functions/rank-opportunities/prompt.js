@@ -14,7 +14,7 @@
 // field, phrasing rules, etc.). src/aiRanking.js folds this into its
 // localStorage cache key so an old cached result can never outlive the
 // prompt that produced it.
-export const PROMPT_VERSION = 2
+export const PROMPT_VERSION = 3
 
 export const MODEL_ID = 'claude-haiku-5-5'
 
@@ -76,6 +76,7 @@ export function buildSystemPrompt() {
     'Never invent revenue, industry, headcount, ownership, attendee details, or any other detail not provided.',
     'A business name may be mentioned with hedging, like "the name suggests a financial services firm" - never state an industry as fact just because the name implies one.',
     'Never treat a business name as a person, and never address or refer to anyone by a personal name - no personal names are present in the data, and none should appear in your response.',
+    'Never state a business\'s ZIP code or any street address in your response, even though ZIP is given to you as a signal - refer to its location by city only. A business filing has no owner, officer, or registered-agent name in the data, so never invent or reference one.',
     'Whenever a date or time appears in your response text, write it in a friendly, human format, like "Nov 18" and "8:30 AM" - never output a raw ISO date like "2026-11-18" or 24-hour time like "08:30".',
     'You are given "Today\'s date" in the user message so you have a fixed reference point, but never state today\'s date itself, a day count, or any relative-time phrase anywhere in your response - the app computes and displays its own countdown tag separately. Write "on Nov 18" - never "six days away," "7 days away," "tomorrow," "next Tuesday," or "next week." Always refer to a date using the friendly exact-date format above instead.',
     `From everything given, select at most ${MAX_RESULTS} of the strongest matches for this advisor - considering both businesses and events together. If fewer than ${MAX_RESULTS} items have enough signal to justify inclusion, return fewer. Never pad the list with weak matches just to reach ${MAX_RESULTS}.`,

@@ -26,6 +26,7 @@ import https from "https";
 import { fileURLToPath } from "url";
 import SftpClient from "ssh2-sftp-client";
 import dotenv from "dotenv";
+import { isLikelyPersonName } from "../src/personNameFilter.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = path.join(__dirname, "..", "data");
@@ -270,9 +271,16 @@ async function writeOpportunitiesJson(filings) {
     zipCoverage: r.zipCoverage,
   }));
 
+  const kept = opportunities.filter((o) => !isLikelyPersonName(o.name));
+  const removed = opportunities.filter((o) => isLikelyPersonName(o.name));
+  if (removed.length > 0) {
+    console.log(`Excluded ${removed.length} filing(s) whose name looks like a person's name:`);
+    removed.forEach((o) => console.log(`  - ${o.name}`));
+  }
+
   await fs.promises.mkdir(path.dirname(OPPORTUNITIES_FILE), { recursive: true });
-  await fs.promises.writeFile(OPPORTUNITIES_FILE, JSON.stringify(opportunities, null, 2) + "\n");
-  return opportunities;
+  await fs.promises.writeFile(OPPORTUNITIES_FILE, JSON.stringify(kept, null, 2) + "\n");
+  return kept;
 }
 
 async function main() {

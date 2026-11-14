@@ -43,7 +43,7 @@ If the AI is unavailable, the feed still loads with a basic ranking.
 
 ## Privacy
 
-Only business-level data is ever stored, shown, or committed — entity name, type, filing date, and ZIP. Personal names (business owners, officers, registered agents) are never stored or printed. Some business names include a person's name; Nexora shows them only as business names and never treats them as people. API keys and credentials live only in a local, untracked `.env` file and are never committed to the repo.
+Only business-level data is ever stored or committed — entity name, type, filing date, ZIP, and city; cards and AI picks display only the name, entity type, city, and filing date. Personal names (business owners, officers, registered agents) and street addresses are never stored, shown, or printed. A filing whose name is essentially a person's name plus an entity suffix (e.g. "Andrew Hill, LLC") is excluded from the data entirely, both from the export and from what the AI sees. API keys and credentials live only in a local, untracked `.env` file and are never committed to the repo.
 
 ## Current status
 
@@ -83,8 +83,11 @@ node scripts/test-ranking.js
 
 ## Roadmap
 
+- Cross-device login, so an advisor's profile and progress follow them between devices
 - Physicians finishing training
 - IRS Form 990 data (private foundations)
 - Form 5500 data (employer retirement plans)
 - More event feeds, through partnerships
 - Nearby counties beyond Hillsborough
+
+For now, there's no sign-in: an advisor's profile and weekly progress live only in their own browser's local storage, on that one device. That's deliberate for judging - it keeps the whole flow to one click, with nothing to log into.

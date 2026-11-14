@@ -363,17 +363,6 @@
     "zipCoverage": "full"
   },
   {
-    "id": "L26000567872",
-    "source": "sunbiz",
-    "type": "business",
-    "name": "ORSZ TECHNOLOGIES L.L.C.",
-    "entityType": "Florida LLC",
-    "date": "2026-11-16",
-    "city": "Tampa",
-    "zip": "33629",
-    "zipCoverage": "full"
-  },
-  {
     "id": "L26000567952",
     "source": "sunbiz",
     "type": "business",
@@ -437,17 +426,6 @@
     "date": "2026-11-12",
     "city": "Tampa",
     "zip": "33602",
-    "zipCoverage": "full"
-  },
-  {
-    "id": "L26000567183",
-    "source": "sunbiz",
-    "type": "business",
-    "name": "KINGDOM SIGNATURE AND DOCUMENT SOLUTIONS LLC",
-    "entityType": "Florida LLC",
-    "date": "2026-11-15",
-    "city": "Tampa",
-    "zip": "33617",
     "zipCoverage": "full"
   },
   {
@@ -822,17 +800,6 @@
     "date": "2026-11-09",
     "city": "Tampa",
     "zip": "33607",
-    "zipCoverage": "full"
-  },
-  {
-    "id": "L26000567096",
-    "source": "sunbiz",
-    "type": "business",
-    "name": "KURT KASPAR LLC",
-    "entityType": "Florida LLC",
-    "date": "2026-11-20",
-    "city": "Brandon",
-    "zip": "33510",
     "zipCoverage": "full"
   },
   {
@@ -1328,17 +1295,6 @@
     "date": "2026-11-12",
     "city": "Tampa",
     "zip": "33612",
-    "zipCoverage": "full"
-  },
-  {
-    "id": "L26000567589",
-    "source": "sunbiz",
-    "type": "business",
-    "name": "M&M INTERNATIONAL EXPRESS LLC",
-    "entityType": "Florida LLC",
-    "date": "2026-11-15",
-    "city": "Tampa",
-    "zip": "33647",
     "zipCoverage": "full"
   },
   {

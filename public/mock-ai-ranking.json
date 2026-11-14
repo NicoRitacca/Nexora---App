@@ -1,67 +1,54 @@
 [
   {
-    "id": "L26000567183",
+    "id": "P26000053446",
     "rank": 1,
     "category": "Potential client",
-    "reason": "The name suggests a document services business, and as a Florida LLC it may be a small business that could need a retirement plan.",
-    "whyNow": "Registered Nov 15, so the owners are likely still making early decisions about benefits and retirement options.",
-    "warmPath": "Ask your CPA firm contact whether they work with any owners of this business.",
+    "reason": "The name suggests a medical practice, and a corporation with a likely staff could fit a small-business retirement plan specialty.",
+    "whyNow": "Registered Nov 12, so the owners are likely still making their first decisions about benefits and retirement plans.",
+    "warmPath": "Ask your CPA firm contact whether they work with any radiology or medical practices in Tampa that might be setting up their first corporate structure.",
     "howToStart": {
-      "firstStep": "Check whether the business has a public website or online listing that describes its services and team.",
-      "whyThisApproach": "Your specialty is small-business retirement plans, so confirming what the business does first keeps your outreach relevant and low-pressure.",
-      "opener": "I work with small businesses on retirement plans, and I noticed your LLC was recently formed, so I wanted to introduce myself in case it's useful to you."
+      "firstStep": "Check whether the business has a public website or online listing that describes its services and team size.",
+      "whyThisApproach": "Your preferred outreach includes introductions, so confirming what the practice does first lets you ask the right person for a warm introduction.",
+      "opener": "I noticed a new corporation was recently registered in Tampa, and I work with small businesses on retirement plans, so I wanted to introduce myself."
     }
   },
   {
-    "id": "evt-emerging-leaders-annual-meeting",
+    "id": "L26000567660",
     "rank": 2,
-    "category": "Networking event",
-    "reason": "This in-person evening event is tagged for emerging professionals, which fits an advisor with four years of experience.",
-    "whyNow": "This event is on Dec 1 from 5:30 PM to 8:30 PM, so there is time to plan attendance and reach out beforehand.",
-    "warmPath": "Your standing with the chamber of commerce gives you a natural reason to attend, and you can ask chamber staff to introduce you to a few attendees.",
-    "howToStart": {
-      "firstStep": "Register for the event and plan to attend in person at The Motor Enclave.",
-      "whyThisApproach": "Your preferred outreach is in person, and this evening event gives you a direct face-to-face setting.",
-      "opener": "I'm an advisor focused on small-business retirement plans, and I'm trying to meet more people building businesses in Tampa Bay."
-    }
-  },
-  {
-    "id": "evt-get-connected",
-    "rank": 3,
-    "category": "Networking event",
-    "reason": "This in-person afternoon networking event gives you a chance to meet local business people through introductions.",
-    "whyNow": "This event is on Dec 2 from 3:00 PM to 5:00 PM, so it is a good time to ask contacts whether they plan to attend.",
-    "warmPath": "Ask your networking breakfast group whether any members plan to attend, so you can arrange introductions there.",
-    "howToStart": {
-      "firstStep": "Ask a contact from your networking breakfast group if they are attending, and request an introduction to one or two people there.",
-      "whyThisApproach": "You prefer introductions, and your breakfast group is a natural place to get them before the event.",
-      "opener": "I specialize in retirement plans for small businesses, and I'd love to meet anyone you think could benefit from that."
-    }
-  },
-  {
-    "id": "L26000567872",
-    "rank": 4,
     "category": "Potential client",
-    "reason": "The name suggests a technology business, and as a Florida LLC it may be a small business that could need a retirement plan.",
-    "whyNow": "Registered Nov 16, so the owners are likely still early in setting up their business decisions, including benefits.",
-    "warmPath": "Ask your CPA firm contact whether they have any clients who know the owners of this business.",
+    "reason": "The name suggests a consulting firm, which may be a small business with employees who could benefit from a retirement plan.",
+    "whyNow": "Registered Nov 12, so the owners are likely still early in setting up their business operations.",
+    "warmPath": "Ask your estate planning attorney's office whether they have clients connected to new consulting businesses in Tampa.",
     "howToStart": {
-      "firstStep": "Check whether the business has a public website or online listing that describes what it does.",
-      "whyThisApproach": "Confirming the business's line of work first fits your small-business retirement focus without making assumptions.",
-      "opener": "I help small businesses set up retirement plans, and since your company is newly registered, I wanted to introduce myself."
+      "firstStep": "Check whether the business has a public website or online listing that shows what services it offers.",
+      "whyThisApproach": "Confirming the line of work first lets you tailor an introduction that fits your in-person and introduction-based outreach style.",
+      "opener": "I saw a new consulting business was registered in Tampa recently, and I help small businesses set up retirement plans, so I'd be glad to share some ideas if useful."
     }
   },
   {
-    "id": "evt-141st-annual-meeting-purpose-celebration",
-    "rank": 5,
-    "category": "Networking event",
-    "reason": "This in-person annual luncheon at a large venue offers a broad group of local business people to meet through introductions.",
-    "whyNow": "This event is on Dec 11 from 11:00 AM to 1:30 PM, which leaves time to request introductions before the luncheon.",
-    "warmPath": "Ask your estate planning attorney's office whether they plan to attend, so you can arrange an introduction there.",
+    "id": "L26000567132",
+    "rank": 3,
+    "category": "Potential client",
+    "reason": "A newly formed Tampa LLC whose name gives no clear line of work, but it could be a small business that needs a retirement plan.",
+    "whyNow": "Registered Nov 12, so the owners are likely still making early decisions about benefits and insurance.",
+    "warmPath": "Ask your CPA firm contact whether they have worked with any new LLCs in Tampa that are looking for retirement plan guidance.",
     "howToStart": {
-      "firstStep": "Ask a contact from your estate planning attorney's office whether they are attending, and request an introduction to a few attendees.",
-      "whyThisApproach": "Your preferred outreach includes introductions, and a trusted contact can make the first connection at a luncheon.",
-      "opener": "I focus on retirement plans for small businesses, and I'd like to meet people who work with local business owners."
+      "firstStep": "Check whether the business has a public website or online listing to learn what it does and whether it has employees.",
+      "whyThisApproach": "Your background in small-business retirement plans works best once you know whether this business has staff to cover.",
+      "opener": "I noticed a new LLC was registered in Tampa recently, and I help small businesses with retirement plans, so I wanted to introduce myself."
+    }
+  },
+  {
+    "id": "evt-light-up-the-season-soiree",
+    "rank": 4,
+    "category": "Networking event",
+    "reason": "An evening mixer hosted by the Tampa Bay Chamber gives you an in-person setting to meet local business owners.",
+    "whyNow": "This event is on Dec 9, from 6:00 PM to 8:00 PM, so you have a few weeks to plan your attendance.",
+    "warmPath": "Your chamber membership gives you a natural reason to attend, and you can ask chamber staff to introduce you to a few attendees.",
+    "howToStart": {
+      "firstStep": "Attend the Light Up the Season soiree at JC Newman Cigar Company on Dec 9 and plan to introduce yourself to a few business owners.",
+      "whyThisApproach": "Your preferred outreach is in person and through introductions, and an evening mixer fits both.",
+      "opener": "I work with small businesses on retirement plans, and I'd love to hear what challenges you're seeing with your team this year."
     }
   }
 ]

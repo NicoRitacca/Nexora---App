@@ -298,9 +298,14 @@ async function main() {
   const hillsboroughRecords = allRecords
     .filter((r) => r.zip5 && hillsboroughZipInfo.has(r.zip5))
     .map((r) => ({ ...r, zipCoverage: hillsboroughZipInfo.get(r.zip5) }));
-  const newHillsboroughFilings = hillsboroughRecords.filter(
+  const withinWindow = hillsboroughRecords.filter(
     (r) => r.fileDate && daysBetween(r.fileDate, fileDate) <= WITHIN_DAYS
   );
+  // Sunbiz records can carry a future effective date (the filing's own date
+  // field is later than the daily file that reported it) - exclude those
+  // rather than show a business "filed" on a date that hasn't happened yet.
+  const futureDatedFilings = withinWindow.filter((r) => r.fileDate > fileDate);
+  const newHillsboroughFilings = withinWindow.filter((r) => r.fileDate <= fileDate);
 
   const fullZipCount = [...hillsboroughZipInfo.values()].filter((v) => v === "full").length;
   const partialZipCount = [...hillsboroughZipInfo.values()].filter((v) => v === "partial").length;
@@ -329,6 +334,14 @@ async function main() {
   console.log(
     `New Hillsborough filings (filed within ${WITHIN_DAYS} days of file date): ${newHillsboroughFilings.length}`
   );
+  if (futureDatedFilings.length > 0) {
+    console.log(
+      `Excluded ${futureDatedFilings.length} filing(s) with a file date later than the daily file's own date (${fmtDate}):`
+    );
+    futureDatedFilings.forEach((r) =>
+      console.log(`  - ${r.name} (filed ${r.fileDate.toISOString().slice(0, 10)})`)
+    );
+  }
   console.log("");
   console.log(
     `Hillsborough ZIPs: ${fullZipCount} full (entirely within Hillsborough), ${partialZipCount} partial (also extend into another county)`

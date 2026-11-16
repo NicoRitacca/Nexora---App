@@ -92,4 +92,13 @@ node scripts/test-ranking.js
 - More event feeds, through partnerships
 - Nearby counties beyond Hillsborough
 
+From advisor feedback:
+
+- Learning from which picks each advisor actually pursues
+- Richer pick tracking (contacted, interested, not relevant, converted), with a weekly recap of past picks
+- Dropdowns for profile fields
+- Confirming businesses are still active using Sunbiz's status field
+- A two-sided version where CPA firms can find advisory partners
+- Links to a business's public website or LinkedIn page
+
 For now, there's no sign-in: an advisor's profile and weekly progress live only in their own browser's local storage, on that one device. That's deliberate for judging - it keeps the whole flow to one click, with nothing to log into.
